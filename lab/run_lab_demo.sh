@@ -54,7 +54,17 @@ scan_checked() {
   shift 3
   local before after
   before="$(snapshot)"
-  python3 "$PROJECT_ROOT/privesc_scan.py" scan --label "$label" --fast --no-color --output-dir "$out_dir" --log-dir "$log_dir" "$@"
+  mkdir -p "$out_dir" "$log_dir"
+  if [[ "$label" == "act2_lab_limited" ]] && id privlab >/dev/null 2>&1; then
+    chmod 0777 "$out_dir" "$log_dir"
+    if command -v runuser >/dev/null 2>&1; then
+      runuser -u privlab -- python3 "$PROJECT_ROOT/privesc_scan.py" scan --label "$label" --fast --no-color --output-dir "$out_dir" --log-dir "$log_dir" "$@"
+    else
+      su -s /bin/bash privlab -c "python3 \"$PROJECT_ROOT/privesc_scan.py\" scan --label \"$label\" --fast --no-color --output-dir \"$out_dir\" --log-dir \"$log_dir\" $*"
+    fi
+  else
+    python3 "$PROJECT_ROOT/privesc_scan.py" scan --label "$label" --fast --no-color --output-dir "$out_dir" --log-dir "$log_dir" "$@"
+  fi
   after="$(snapshot)"
   {
     printf 'SCAN %s\nBEFORE\n%s\nAFTER\n%s\n' "$label" "$before" "$after"
