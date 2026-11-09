@@ -15,6 +15,7 @@ def test_runner_accepts_only_expected_read_only_commands():
 @pytest.mark.parametrize("argv", [
     ["sh", "-c", "id"],
     ["find", "/", "-type", "f", "-perm", "/6000", "-exec", "id", ";"],
+    ["find", "/", "-type", "f", "-perm", "/6000", "-exec", "id", "-printf", "%p\\0"],
     ["find", "/", "-type", "f", "-perm", "/6000", "-delete"],
     ["find", "/", "-type", "f", "-perm", "/6000", "-fprint", "/tmp/out"],
     ["sudo", "-l"],
