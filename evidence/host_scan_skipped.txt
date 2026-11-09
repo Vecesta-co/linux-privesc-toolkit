@@ -1,0 +1,3 @@
+Command: .venv Python privesc_scan.py scan --fast --no-color
+Exit code: 2
+Linux only — use WSL, Docker, or a Linux VM
