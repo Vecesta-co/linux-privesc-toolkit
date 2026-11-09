@@ -1,0 +1,5 @@
+Matching Defaults entries for privlab on kali:
+    env_reset, mail_badpass
+User privlab may run the following commands on kali:
+    (root) NOPASSWD: /usr/bin/find
+    (ALL : ALL) ALL

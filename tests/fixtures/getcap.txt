@@ -1,0 +1,2 @@
+/usr/bin/ping cap_net_raw=ep
+/opt/privesc-lab/python_cap cap_setuid=ep

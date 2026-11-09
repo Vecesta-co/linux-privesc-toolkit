@@ -1,0 +1,21 @@
+{
+  "/usr/bin/passwd":"SUID; manages account credentials through PAM",
+  "/usr/bin/su":"SUID; switches users after authentication",
+  "/usr/bin/sudo":"SUID; controlled privilege delegation",
+  "/usr/bin/chsh":"SUID; changes a user's login shell",
+  "/usr/bin/chfn":"SUID; changes finger information",
+  "/usr/bin/gpasswd":"SUID; manages group membership",
+  "/usr/bin/newgrp":"SUID; changes the active group",
+  "/usr/bin/mount":"SUID; mount helper on some distributions",
+  "/usr/bin/umount":"SUID; unmount helper on some distributions",
+  "/usr/bin/pkexec":"SUID; PolicyKit helper (review vendor patch state)",
+  "/usr/bin/at":"SUID; job submission helper on some distributions",
+  "/usr/bin/crontab":"SUID; cron job management helper on some distributions",
+  "/usr/bin/ssh-agent":"SUID; uncommon and should be reviewed",
+  "/usr/lib/openssh/ssh-keysign":"SUID; SSH host-based authentication helper",
+  "/usr/lib/dbus-1.0/dbus-daemon-launch-helper":"SUID; D-Bus helper",
+  "/usr/lib/polkit-1/polkit-agent-helper-1":"SUID; PolicyKit authentication helper",
+  "/usr/lib/snapd/snap-confine":"SUID; snap confinement helper",
+  "/usr/bin/fusermount3":"SUID; FUSE mount helper",
+  "/usr/bin/fusermount":"SUID; FUSE mount helper"
+}

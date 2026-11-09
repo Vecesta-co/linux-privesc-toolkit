@@ -1,0 +1,4 @@
+NAME="Kali GNU/Linux"
+VERSION_ID="2026.3"
+ID=kali
+PRETTY_NAME="Kali GNU/Linux Rolling"

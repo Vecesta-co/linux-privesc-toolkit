@@ -1,0 +1,7 @@
+{
+  "compiled_date":"2026-11-09",
+  "source":"https://www.kernel.org/releases.html",
+  "policy":"Series below 5.10 are treated as upstream EOL. The 5.10 and 5.15 longterm branches are listed by kernel.org with projected EOL in December 2026.",
+  "longterm":{"6.18":"2028-12","6.12":"2028-12","6.6":"2027-12","6.1":"2027-12","5.15":"2026-12","5.10":"2026-12"},
+  "vendor_note":"Distribution kernels may receive vendor security fixes beyond upstream series support dates."
+}

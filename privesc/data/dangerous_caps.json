@@ -1,0 +1,14 @@
+{
+  "cap_setuid":"Can change process UID; especially sensitive on interpreters and general-purpose binaries.",
+  "cap_setgid":"Can change process GID and group credentials.",
+  "cap_dac_override":"Bypasses ordinary file read, write, and execute permission checks.",
+  "cap_dac_read_search":"Bypasses file read and directory search permission checks.",
+  "cap_sys_admin":"Broad kernel and system administration authority.",
+  "cap_sys_ptrace":"Can inspect or control other processes subject to kernel policy.",
+  "cap_sys_module":"Can load or unload kernel modules.",
+  "cap_setfcap":"Can assign file capabilities to files.",
+  "cap_net_raw":"Can use raw and packet sockets; may enable traffic capture or crafted packets.",
+  "cap_chown":"Can change file ownership.",
+  "cap_fowner":"Can bypass ownership checks for operations such as permission changes.",
+  "cap_linux_immutable":"Can change immutable and append-only file attributes."
+}

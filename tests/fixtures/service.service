@@ -1,0 +1,7 @@
+[Unit]
+Description=Disposable lab service
+[Service]
+ExecStart=/opt/privesc-lab/service_task.sh
+Environment=PATH=/tmp:/usr/bin:/bin
+[Install]
+WantedBy=multi-user.target

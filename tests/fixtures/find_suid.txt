@@ -1,0 +1,3 @@
+4755:0:0:/opt/privesc-lab/find_suid
+4755:0:0:/usr/bin/passwd
+2755:0:5:/usr/bin/example-group

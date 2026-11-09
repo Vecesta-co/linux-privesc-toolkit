@@ -1,0 +1,4 @@
+SHELL=/bin/sh
+@yearly root /opt/privesc-lab/backup.sh
+@yearly root tar -czf /opt/privesc-lab/backup.tar.gz *
+0 3 * * * backup-user /usr/local/bin/rotate
