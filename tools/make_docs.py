@@ -18,7 +18,7 @@ EVIDENCE = ROOT / "evidence"
 
 
 def load_real_evidence():
-    for folder in (EVIDENCE / "run2", EVIDENCE / "run1"):
+    for folder in (EVIDENCE / "final" / "run2", EVIDENCE / "final" / "run1", EVIDENCE / "final", EVIDENCE / "audit2", EVIDENCE / "audit1", EVIDENCE / "run2", EVIDENCE / "run1"):
         report = folder / "act2_lab" / "scan_act2_lab.json"
         if report.is_file():
             return folder, json.loads(report.read_text(encoding="utf-8"))
@@ -29,6 +29,8 @@ def load_pytest_counts() -> dict:
     result = {}
     for run in (1, 2):
         path = EVIDENCE / f"pytest_run{run}.txt"
+        if not path.exists():
+            path = EVIDENCE / "final" / f"pytest_run{run}.txt"
         text = path.read_text(encoding="utf-8", errors="replace") if path.exists() else ""
         match = re.search(r"(\d+) passed(?:,\s*(\d+) failed)?(?:,\s*(\d+) skipped)?", text)
         if match:
