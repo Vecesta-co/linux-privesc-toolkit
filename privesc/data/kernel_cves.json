@@ -1,20 +1,104 @@
 [
   {
-    "cve":"CVE-2016-5195",
-    "name":"Dirty COW",
-    "affected_ranges":[["2.6.22","3.2.83"],["3.3.0","3.4.113"],["3.5.0","3.10.104"],["3.11.0","3.12.66"],["3.13.0","3.16.38"],["3.17.0","3.18.44"],["3.19.0","4.1.35"],["4.2.0","4.4.26"],["4.5.0","4.7.9"],["4.8.0","4.8.3"]],
-    "fixed_in":"4.8.3 (upstream; stable branches have separate fixed releases)",
-    "references":["https://nvd.nist.gov/vuln/detail/CVE-2016-5195"],
-    "verified":true,
-    "notes":"NVD documents affected upstream branches. Distribution kernels may backport the fix; version-only matching can over-report, especially on vendor kernels."
+    "cve": "CVE-2016-5195",
+    "name": "Dirty COW",
+    "affected_ranges": [
+      ["2.6.22", "3.2.83"],
+      ["3.3.0", "3.4.113"],
+      ["3.5.0", "3.10.104"],
+      ["3.11.0", "3.12.66"],
+      ["3.13.0", "3.16.38"],
+      ["3.17.0", "3.18.44"],
+      ["3.19.0", "4.1.35"],
+      ["4.2.0", "4.4.26"],
+      ["4.5.0", "4.7.9"],
+      ["4.8.0", "4.8.3"]
+    ],
+    "fixed_in": "4.8.3 (upstream; stable branches have separate fixed releases)",
+    "references": [
+      "https://nvd.nist.gov/vuln/detail/CVE-2016-5195"
+    ],
+    "verified": true,
+    "notes": "NVD documents affected upstream branches. Distribution kernels may backport the fix; version-only matching can over-report, especially on vendor kernels."
   },
   {
-    "cve":"CVE-2022-0847",
-    "name":"Dirty Pipe",
-    "affected_ranges":[["5.8.0","5.10.102"],["5.15.0","5.15.25"],["5.16.0","5.16.11"]],
-    "fixed_in":"5.10.102, 5.15.25, 5.16.11 (branch-specific)",
-    "references":["https://nvd.nist.gov/vuln/detail/CVE-2022-0847"],
-    "verified":true,
-    "notes":"Range from NVD affected configurations. Vendor kernels may backport fixes; version-only matching is advisory."
+    "cve": "CVE-2022-0847",
+    "name": "Dirty Pipe",
+    "affected_ranges": [
+      ["5.8.0", "5.10.102"],
+      ["5.15.0", "5.15.25"],
+      ["5.16.0", "5.16.11"]
+    ],
+    "fixed_in": "5.10.102, 5.15.25, 5.16.11 (branch-specific)",
+    "references": [
+      "https://nvd.nist.gov/vuln/detail/CVE-2022-0847"
+    ],
+    "verified": true,
+    "notes": "Range from NVD affected configurations. Vendor kernels may backport fixes; version-only matching is advisory."
+  },
+  {
+    "cve": "CVE-2021-22555",
+    "name": "Netfilter Heap Out-of-Bounds Write",
+    "affected_ranges": [
+      ["2.6.19", "5.12.4"]
+    ],
+    "fixed_in": "5.12.4, 5.11.21, 5.10.37, 5.4.119, 4.19.191, 4.14.233, 4.9.269, 4.4.269",
+    "references": [
+      "https://nvd.nist.gov/vuln/detail/CVE-2021-22555"
+    ],
+    "verified": true,
+    "notes": "Flaw in net/netfilter/x_tables.c during IPT_SO_SET_REPLACE. Stable branches received separate backports."
+  },
+  {
+    "cve": "CVE-2021-3493",
+    "name": "Ubuntu OverlayFS Privilege Escalation",
+    "affected_ranges": [
+      ["3.13.0", "5.11.0"]
+    ],
+    "fixed_in": "Ubuntu security notices USN-4917-1, USN-4915-1",
+    "references": [
+      "https://nvd.nist.gov/vuln/detail/CVE-2021-3493"
+    ],
+    "verified": true,
+    "notes": "Ubuntu-specific overlayfs/shiftfs capability checking flaw in user namespaces. Standard upstream kernel ranges do not necessarily contain this Ubuntu patch flaw."
+  },
+  {
+    "cve": "CVE-2023-0386",
+    "name": "OverlayFS SUID Copy-Up",
+    "affected_ranges": [
+      ["5.11.0", "6.2.0"]
+    ],
+    "fixed_in": "6.2, 6.1.13, 5.15.95, 5.10.169",
+    "references": [
+      "https://nvd.nist.gov/vuln/detail/CVE-2023-0386"
+    ],
+    "verified": true,
+    "notes": "Improper SUID permission copy-up when mounting overlayfs in unprivileged user namespaces."
+  },
+  {
+    "cve": "CVE-2017-16995",
+    "name": "eBPF Sign-Extension Vulnerability",
+    "affected_ranges": [
+      ["4.9.0", "4.14.9"]
+    ],
+    "fixed_in": "4.14.9, 4.9.72",
+    "references": [
+      "https://nvd.nist.gov/vuln/detail/CVE-2017-16995"
+    ],
+    "verified": true,
+    "notes": "Verifier failed to correctly track 32-bit arithmetic sign extension in kernel/bpf/verifier.c."
+  },
+  {
+    "cve": "CVE-2022-2588",
+    "name": "Route4 cls_route Heap Double-Free (DirtyCred)",
+    "affected_ranges": [
+      ["2.6.12", "5.19.0"]
+    ],
+    "fixed_in": "5.19, 5.18.17, 5.15.60, 5.10.136",
+    "references": [
+      "https://nvd.nist.gov/vuln/detail/CVE-2022-2588"
+    ],
+    "verified": true,
+    "notes": "Use-after-free / double-free flaw in net/sched/cls_route.c enabling credential object reuse."
   }
 ]
