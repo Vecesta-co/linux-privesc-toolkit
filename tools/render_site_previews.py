@@ -78,3 +78,4 @@ def render_screenshots():
 
 if __name__ == "__main__":
     render_screenshots()
+

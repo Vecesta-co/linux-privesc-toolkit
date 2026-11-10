@@ -374,3 +374,4 @@ function renderCommandRows(commands) {
     </tr>`;
   }).join("");
 }
+

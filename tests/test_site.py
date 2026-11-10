@@ -67,3 +67,4 @@ def test_no_personal_user_leaks_in_site():
         if path.is_file() and path.suffix.lower() in (".html", ".css", ".js", ".json", ".txt"):
             content = path.read_text(encoding="utf-8", errors="ignore")
             assert not win_user_re.search(content), f"Personal Windows path detected in {path}"
+
