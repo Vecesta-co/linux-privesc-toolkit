@@ -105,3 +105,44 @@ All commands below ran from the project root unless otherwise stated. Results re
 - Shell script syntax: LF enforced on all `.sh` scripts, executable index bits set.
 
 - Status: PASS. Ready for Kali Linux VM evidence collection.
+
+## Deployment Pass — Static Site & GitHub Pages CI/CD (2026-11-10)
+
+- Project: Linux Privilege Escalation Automation Toolkit
+- Target Repository: `linux-privesc-toolkit`
+- Author: Vansh Dhawan
+- Organization: Vecesta.co · Unified Mentor
+- Mode: DRAFT mode (real Linux evidence pending Kali execution; all placeholders transparently marked PENDING REAL RUN)
+
+### Actions Taken:
+1. **Task C0 — State Discovery & Mode Determination**:
+   - Inspected repository state; confirmed project is "Linux Privilege Escalation Automation Toolkit".
+   - Verified that `evidence/INGEST_REPORT.md` is not yet populated with real Linux scan results. Determined site build mode is DRAFT.
+2. **Task C1 — Configuration & URL Setter Tool**:
+   - Created `config/site.json` with keys `project_name`, `tagline`, `author`, `company`, `program`, `repo_url`, and `live_url`.
+   - Created `tools/set_live_url.py <live_url> <repo_url>` to update configuration, update README links, rebuild static site, and regenerate DOCX and PPTX deliverables.
+3. **Task C2 & C3 — Static Site Architecture & Templates**:
+   - Built `site_src/style.css` (custom dark theme `#0E1116`, zero CDNs/external fonts, responsive, accessible, AA contrast).
+   - Built `site_src/app.js` (mobile navigation toggle, copyable code blocks, client-side interactive Report Viewer with local JSON FileReader).
+   - Built `site_src/index.html` (single-page showcase with sticky nav, Hero, The Problem, What It Checks, Architecture & Flowchart diagrams, 3-Act Demo with terminal screenshots, KPI stat cards, Sample Reports, Safety Model & Ethics, Limitations, Tech Stack, Quick Start, and Downloads).
+   - Built `site_src/viewer.html` (interactive report viewer with sample selector, search filter, severity filter, category filter, expandable finding details, coverage checklist, and allowlisted command table).
+   - Implemented `tools/build_site.py` to generate `site/` deterministically: copies assets, sample reports, screenshots, downloads; optimizes PNGs via Pillow; generates `.nojekyll`, `404.html`, `robots.txt`, `build_info.json`; enforces <10 MB per-file and <50 MB site limits; executes strict privacy scanner against personal paths and secrets. Added `site/` to `.gitignore`.
+4. **Task C4 — GitHub Actions Workflow**:
+   - Created `.github/workflows/pages.yml` with permissions (`contents: read`, `pages: write`, `id-token: write`), checkout@v4, setup-python@v5, build_site.py, check_site.py, configure-pages@v5, upload-pages-artifact@v3, and deploy-pages@v4.
+5. **Task C5 — Site Integrity Tooling & Tests**:
+   - Implemented `tools/check_site.py` validating essential files, HTML metadata (`lang`, `<title>`, `<meta description>`), image alt attributes, zero external resource loads, internal link/anchor resolution, sample JSON schema integrity, and live loopback HTTP server responses.
+   - Authored `tests/test_site.py` covering site build, sample schema, and privacy leak checks (3 tests passing).
+6. **Task C6 — Headless Browser Visual Audit**:
+   - Implemented `tools/render_site_previews.py` using headless Microsoft Edge to capture desktop (1440x900) and mobile (390x844) screenshots into `docs/site_preview/`.
+   - Conducted visual audit and authored `docs/SITE_QA.md` scoring index and viewer pages at 8.5/10 to 9/10 with zero validation errors.
+7. **Task C7 — Deployment Documentation & Pipeline Integration**:
+   - Authored beginner click-by-click guide `docs/DEPLOYMENT_GUIDE.md` with step-by-step instructions, troubleshooting matrix, and alternative hosts.
+   - Authored `docs/DEPLOYMENT_PROOF.md` with checklist and template for recording live URLs and screenshot receipts.
+   - Updated `README.md`, `docs/SUBMISSION_CHECKLIST.md`, and `docs/GITHUB_REPO_INFO.md`.
+   - Updated `tools/make_docs.py` adding a "Live deployment" chapter to `Project_Report.docx` and a dedicated "Live deployment" slide (Slide 15) to `Final_Presentation.pptx`.
+8. **Task C8 — Final Verification**:
+   - Full pytest suite: 33 passed, 1 skipped.
+   - Consistency check (`python tools/check_consistency.py --draft`): 68/68 required files PASS.
+   - Fresh-clone build and check test verified.
+
+- Status: PASS. All deployment artifacts, workflows, and documentation complete.

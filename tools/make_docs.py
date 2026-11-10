@@ -15,6 +15,16 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
 EVIDENCE = ROOT / "evidence"
+CONFIG_FILE = ROOT / "config" / "site.json"
+
+
+def load_site_config() -> dict:
+    if CONFIG_FILE.is_file():
+        try:
+            return json.loads(CONFIG_FILE.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    return {}
 
 
 def load_real_evidence():
@@ -196,7 +206,7 @@ def make_docx(folder, data):
     text_run = OxmlElement("w:t"); text_run.text = "Open in Word and update the table of contents field."
     fld_end = OxmlElement("w:fldChar"); fld_end.set(qn("w:fldCharType"), "end")
     r._r.append(fld_begin); r._r.append(instr); r._r.append(sep); r._r.append(text_run); r._r.append(fld_end)
-    for item in ("Abstract", "Introduction", "Objectives and scope", "Tools and technologies", "Architecture and workflow", "Implementation", "Rule catalog", "Safety model", "Lab design", "Testing and verification", "Results", "Mitigation guidance", "Limitations and future work", "Ethics and legal note", "Conclusion", "References", "Appendices"):
+    for item in ("Abstract", "Introduction", "Objectives and scope", "Tools and technologies", "Architecture and workflow", "Implementation", "Rule catalog", "Safety model", "Lab design", "Testing and verification", "Results", "Mitigation guidance", "Live deployment", "Limitations and future work", "Ethics and legal note", "Conclusion", "References", "Appendices"):
         para(item)
     new_page()
 
@@ -348,6 +358,21 @@ def make_docx(folder, data):
     para("Mitigation advice is specific to the configuration class. Administrators should preserve application requirements, test changes in staging, and follow the distribution's own service and package procedures.")
     new_page()
 
+    heading("Live deployment")
+    site_cfg = load_site_config()
+    live_url = site_cfg.get("live_url") or "https://YOUR-USERNAME.github.io/linux-privesc-toolkit/ (link available after deployment)"
+    repo_url = site_cfg.get("repo_url") or "https://github.com/YOUR-USERNAME/linux-privesc-toolkit"
+    para(f"The project is deployed as a static security auditing and documentation portal on GitHub Pages at: {live_url}. The deployment includes a client-side interactive report viewer (viewer.html) that executes directly in the user's browser without transferring scan data to any remote server.")
+    table(["Deployment attribute", "Configuration detail"], [
+        ["Hosting platform", "GitHub Pages (continuous deployment via GitHub Actions)"],
+        ["Workflow definition", ".github/workflows/pages.yml (triggers on push to main)"],
+        ["Live site URL", live_url],
+        ["Source repository", repo_url],
+        ["Static build pipeline", "tools/build_site.py and tools/check_site.py"],
+        ["Privacy boundary", "100% self-contained; zero CDNs, zero remote trackers, zero external fonts"]
+    ])
+    new_page()
+
     heading("Limitations and future work")
     heading("Current limitations", 2)
     para("A version string cannot prove that a vendor kernel is vulnerable because distributions backport fixes. Files unreadable by a limited account remain unknown, not clean. GTFOBins matching is contextual and can produce findings that require human review. File scans may be incomplete when GNU find, getcap, or permissions are unavailable.")
@@ -467,13 +492,13 @@ def make_presentation(folder, data):
         add_text(slide, title, x+.18, y+.34, w-.36, .44, title_size, C["text"], True)
         add_text(slide, body, x+.18, y+.86, w-.36, h-1.0, body_size, C["muted"], False, valign=MSO_ANCHOR.TOP)
 
-    def setup(title, slide_no):
+    def setup(title, slide_no, total=16):
         slide = prs.slides.add_slide(blank)
         bg = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, prs.slide_width, prs.slide_height); bg.fill.solid(); bg.fill.fore_color.rgb = rgb(C["bg"]); bg.line.fill.background()
         add_text(slide, title, .62, .3, 12.05, .62, 34, C["text"], True)
         add_box(slide, .64, 1.03, .62, .055, C["green"], C["green"], False)
         add_text(slide, "Linux Privilege Escalation Automation Toolkit", .62, 7.08, 8.5, .24, 12, C["muted"])
-        add_text(slide, f"{slide_no:02d} / 15", 11.35, 7.08, 1.35, .24, 12, C["muted"], align=PP_ALIGN.RIGHT)
+        add_text(slide, f"{slide_no:02d} / {total:02d}", 11.35, 7.08, 1.35, .24, 12, C["muted"], align=PP_ALIGN.RIGHT)
         return slide
 
     notes = [
@@ -491,6 +516,7 @@ def make_presentation(folder, data):
         "Comparison fingerprints use the finding rule ID and evidence keys such as path, subject, source, unit, or CVE. A finding that remains after lab teardown may still be a baseline condition, so the verifier checks that planted fingerprints disappear rather than requiring every rule ID to vanish. The comparison report also lists NEW, FIXED, and UNCHANGED findings. Real counts are populated from the reports when those files are available.",
         "Mitigations reduce the privileges of files and automation. Remove unnecessary SUID bits, protect privileged scripts and their parent directories, restrict sudo to exact commands, use absolute cron command paths and controlled file lists, and keep service PATH entries trusted. Remove capabilities that are not required. For kernel advisories, apply vendor updates and check the distribution's backport status before concluding that a version is vulnerable.",
         "The fixture suite can run on Windows, but real collectors and the lab need Linux. Kernel matching is advisory because distro backports can make numeric version comparison conservative. A limited account cannot see files it cannot read. The current VM could not be controlled until a guest login session existed, so the real Linux phases are skipped. Future work includes vendor advisory feeds and two reproducible Kali runs that regenerate the report and deck.",
+        "The toolkit documentation and interactive report viewer are published as a static website hosted on GitHub Pages. Continuous deployment is handled automatically by a GitHub Actions workflow on every push to the main branch. The site includes a fully client-side report viewer that runs locally in the browser without sending data to any external server. A placeholder URL is displayed until the repository remote is configured by the student. The deployment maintains strict privacy boundaries with zero external trackers or CDNs.",
         "The toolkit is intended for systems you own or are explicitly authorized to assess. Reports can include account names, file paths, and configuration details, so store and share them responsibly. The lab creates real weaknesses and belongs only in a disposable virtual machine or container. The scanner is a triage aid, not a certification that a system is secure. Questions: how does the allowlist work, why are kernel findings advisory, and what proves that the scan did not alter key files?"
     ]
 
@@ -646,12 +672,24 @@ def make_presentation(folder, data):
         add_box(slide,.95,1.45+i*.75,11.35,.53,C["card"],C["edge"]); add_text(slide,line,1.2,1.49+i*.75,10.8,.4,17,C["green"] if "passed" in line or "PASS" in line else C["amber"])
     slide.notes_slide.notes_text_frame.text = notes[13]
 
-    # 15 Q&A
-    slide = setup("Limitations, future work and Q&A", 15)
-    add_card(slide,.9,1.55,5.25,2.2,"Limitations","Vendor backports\nLimited-user visibility\nLinux-only collectors",C["amber"],20,16)
-    add_card(slide,7.05,1.55,5.25,2.2,"Next work","Run Kali demo twice\nRefresh evidence-based charts\nReview findings with supervisor",C["cyan"],20,16)
-    add_text(slide,"Questions",4.7,4.65,4.0,.65,31,C["green"],True,align=PP_ALIGN.CENTER)
+    # 15 Live deployment
+    slide = setup("Live deployment", 15)
+    site_cfg = load_site_config()
+    live_url = site_cfg.get("live_url") or "https://YOUR-USERNAME.github.io/linux-privesc-toolkit/ (pending deploy)"
+    repo_url = site_cfg.get("repo_url") or "https://github.com/YOUR-USERNAME/linux-privesc-toolkit"
+    add_card(slide, .85, 1.55, 5.6, 2.3, "GitHub Pages portal", f"Static documentation and interactive report viewer.\n\nLive URL:\n{live_url}", C["green"], 20, 15)
+    add_card(slide, 6.85, 1.55, 5.6, 2.3, "Continuous deployment", f"GitHub Actions workflow (.github/workflows/pages.yml).\nAuto-deploys on every push to main.\n\nRepository:\n{repo_url}", C["cyan"], 20, 15)
+    add_box(slide, .85, 4.25, 11.6, 1.3, C["card"], C["edge"])
+    add_text(slide, "Zero external requests · Fully client-side report viewer · Zero server footprint", 1.0, 4.45, 11.3, .4, 18, C["green"], True, align=PP_ALIGN.CENTER)
+    add_text(slide, "Set live URL via python tools/set_live_url.py <live_url> <repo_url>", 1.0, 4.95, 11.3, .35, 15, C["muted"], align=PP_ALIGN.CENTER)
     slide.notes_slide.notes_text_frame.text = notes[14]
+
+    # 16 Q&A
+    slide = setup("Limitations, future work and Q&A", 16)
+    add_card(slide, .9, 1.55, 5.25, 2.2, "Limitations", "Vendor backports\nLimited-user visibility\nLinux-only collectors", C["amber"], 20, 16)
+    add_card(slide, 7.05, 1.55, 5.25, 2.2, "Next work", "Run Kali demo twice\nRefresh evidence-based charts\nReview findings with supervisor", C["cyan"], 20, 16)
+    add_text(slide, "Questions", 4.7, 4.65, 4.0, .65, 31, C["green"], True, align=PP_ALIGN.CENTER)
+    slide.notes_slide.notes_text_frame.text = notes[15]
 
     output = DOCS / "Final_Presentation.pptx"
     prs.save(output)
@@ -696,7 +734,7 @@ def validate_presentation(path, allowed_fonts):
                             estimated=lines*fs/72*1.25
                             # Only flag very obvious overflows (heuristic; word-wrap renders shorter)
                             if estimated > shape.height/914400*2.2 and len(run.text)>40: errors.append(f"slide {slide_no} possible text overflow in {run.text[:24]!r}")
-    if len(prs.slides)!=15: errors.append(f"expected 15 slides, found {len(prs.slides)}")
+    if len(prs.slides) != 16: errors.append(f"expected 16 slides, found {len(prs.slides)}")
     receipt={"slides":len(prs.slides),"notes":notes_count,"pictures":pictures,"charts":charts,"minimum_font_pt":min_size,"fonts":sorted(fonts),"errors":errors}
     (DOCS/"ppt_validation.json").write_text(json.dumps(receipt,indent=2)+"\n",encoding="utf-8")
     if errors: raise RuntimeError("presentation validation failed: "+"; ".join(errors))
@@ -777,10 +815,10 @@ def render_presentation_previews(path):
                         if cy > y+h-10: break
                         draw.text((cx,cy),line,font=f,fill=color); cy+=max(25,int(size*1.5))
         file=preview/f"slide-{slide_no:02d}.png"; canvas.save(file); thumbs.append(canvas.copy())
-    contact=Image.new("RGB",(1600,1350),"#0E1116"); d=ImageDraw.Draw(contact)
-    tw,th=512,288
+    contact=Image.new("RGB",(1600,1000),"#0E1116"); d=ImageDraw.Draw(contact)
+    tw,th=380,214
     for i,img in enumerate(thumbs):
-        thumb=img.resize((tw,th)); x=24+(i%3)*528; y=24+(i//3)*260
+        thumb=img.resize((tw,th)); x=20+(i%4)*392; y=20+(i//4)*240
         contact.paste(thumb,(x,y)); d.rectangle((x,y,x+tw-1,y+th-1),outline="#30363D",width=2)
         d.text((x+8,y+6),f"{i+1:02d}",font=font("Consolas",12),fill="#3FB950")
     contact.save(DOCS/"ppt_contact_sheet.png")

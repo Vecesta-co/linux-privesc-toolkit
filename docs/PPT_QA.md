@@ -51,3 +51,4 @@ The deck was validated programmatically by `validate_presentation()` in `tools/m
 - **Alt Text:** Present on embedded terminal pictures (`nvPicPr.cNvPr.descr`)
 - **Canvas Boundaries:** Zero shapes out of canvas bounds
 - **Validation Errors:** 0
+

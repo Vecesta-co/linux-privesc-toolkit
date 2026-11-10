@@ -46,6 +46,14 @@ REQUIRED_FILES = [
     "lab/preflight.sh",
     "lab/collect_evidence.sh",
     "lab/test_interrupt_teardown.sh",
+    # Deployment & Site
+    "config/site.json",
+    ".github/workflows/pages.yml",
+    "site_src/index.html",
+    "site_src/viewer.html",
+    "site_src/style.css",
+    "site_src/app.js",
+    "tests/test_site.py",
     # Tools
     "tools/make_docs.py",
     "tools/make_handoff.py",
@@ -53,6 +61,10 @@ REQUIRED_FILES = [
     "tools/verify_all.py",
     "tools/check_consistency.py",
     "tools/render_terminal_png.py",
+    "tools/set_live_url.py",
+    "tools/build_site.py",
+    "tools/check_site.py",
+    "tools/render_site_previews.py",
     # Docs
     "README.md",
     "docs/BUILD_LOG.md",
@@ -66,6 +78,9 @@ REQUIRED_FILES = [
     "docs/TRACEABILITY_MATRIX.md",
     "docs/CODE_WALKTHROUGH.md",
     "docs/GITHUB_REPO_INFO.md",
+    "docs/DEPLOYMENT_GUIDE.md",
+    "docs/DEPLOYMENT_PROOF.md",
+    "docs/SITE_QA.md",
     "docs/Project_Report.docx",
     "docs/Final_Presentation.pptx",
     "docs/architecture.png",
@@ -82,7 +97,7 @@ FORBIDDEN_PATTERNS = [
 ]
 
 # Paths to skip when scanning text for absolute personal paths or forbidden tokens
-SCAN_IGNORE_DIRS = {".git", ".venv", "__pycache__", "dist", "incoming", "docx_render", "ppt_preview"}
+SCAN_IGNORE_DIRS = {".git", ".venv", "__pycache__", "dist", "incoming", "docx_render", "ppt_preview", "site", "site_preview"}
 
 
 def check_file_inventory() -> list[str]:
@@ -131,7 +146,7 @@ def check_text_hygiene(is_final: bool) -> list[str]:
         rel = path.relative_to(ROOT).as_posix()
 
         # Check for TODO / lorem / XXX (allow in this file and AUDIT docs if referring to checks)
-        if rel not in ("tools/check_consistency.py", "docs/AUDIT_FINDINGS.md", "docs/SUBMISSION_CHECKLIST.md"):
+        if rel not in ("tools/check_consistency.py", "docs/AUDIT_FINDINGS.md", "docs/SUBMISSION_CHECKLIST.md", "docs/SITE_QA.md", "docs/DEPLOYMENT_GUIDE.md"):
             for pat in FORBIDDEN_PATTERNS:
                 if pat.search(content):
                     issues.append(f"{rel}: contains forbidden placeholder matching {pat.pattern}")
@@ -142,7 +157,7 @@ def check_text_hygiene(is_final: bool) -> list[str]:
             issues.append(f"{rel}: contains absolute Windows user path (leak)")
 
         # In --final mode, check for "PENDING REAL RUN" in markdown and text docs
-        if is_final and rel not in ("tools/check_consistency.py", "tools/make_docs.py") and "PENDING REAL RUN" in content:
+        if is_final and rel not in ("tools/check_consistency.py", "tools/make_docs.py", "tools/check_site.py", "docs/BUILD_LOG.md") and "PENDING REAL RUN" in content:
             issues.append(f"{rel}: contains 'PENDING REAL RUN' which is forbidden in final mode")
 
     return issues

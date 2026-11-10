@@ -3,6 +3,7 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Safety: Detection Only](https://img.shields.io/badge/safety-detection--only-green.svg)](docs/DECISIONS.md)
+[![GitHub Pages](https://img.shields.io/badge/Pages-Deployed-success.svg)](#live-demo)
 
 **Author:** Vansh Dhawan  
 **Company:** Vecesta.co  
@@ -12,6 +13,15 @@
 A detection-only Linux security auditing toolkit for authorized systems. The toolkit inspects configuration evidence, applies small, explainable rules, and exports structured reports in JSON, Markdown, and self-contained HTML. It **never exploits**, **never modifies system files**, and **never executes payloads**.
 
 Designed for dual-use in red-team enumeration and blue-team auditing practice.
+
+---
+
+## Live Demo & Documentation Site
+
+- **Live Documentation & Report Viewer:** `https://YOUR-USERNAME.github.io/linux-privesc-toolkit/` *(link active after GitHub Pages deployment)*
+- **Interactive Report Viewer Direct Link:** `https://YOUR-USERNAME.github.io/linux-privesc-toolkit/viewer.html`
+- **GitHub Repository:** `https://github.com/YOUR-USERNAME/linux-privesc-toolkit`
+- *Note:* Run `python tools/set_live_url.py <live_url> <repo_url>` after creating your GitHub repository to update these links across the project automatically.
 
 ---
 

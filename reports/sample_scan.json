@@ -1,0 +1,279 @@
+{
+  "commands": [
+    {
+      "display": "id -u; id -un; id -G -n",
+      "elapsed_seconds": 0.01,
+      "returncode": 0,
+      "skipped_reason": "ran"
+    },
+    {
+      "display": "uname -r",
+      "elapsed_seconds": 0.01,
+      "returncode": 0,
+      "skipped_reason": "ran"
+    },
+    {
+      "display": "find / -perm -4000 -o -perm -2000",
+      "elapsed_seconds": 0.42,
+      "returncode": 0,
+      "skipped_reason": "ran"
+    },
+    {
+      "display": "getcap -r /",
+      "elapsed_seconds": 0.15,
+      "returncode": 0,
+      "skipped_reason": "ran"
+    }
+  ],
+  "coverage": {
+    "caps": {
+      "reason": "",
+      "status": "ran"
+    },
+    "cron": {
+      "reason": "",
+      "status": "ran"
+    },
+    "kernel": {
+      "reason": "",
+      "status": "ran"
+    },
+    "perms": {
+      "reason": "",
+      "status": "ran"
+    },
+    "services": {
+      "reason": "",
+      "status": "ran"
+    },
+    "shadow_read": {
+      "reason": "Permission denied (unprivileged account)",
+      "status": "skipped"
+    },
+    "sudo": {
+      "reason": "",
+      "status": "ran"
+    },
+    "suid": {
+      "reason": "",
+      "status": "ran"
+    },
+    "sysinfo": {
+      "reason": "",
+      "status": "ran"
+    }
+  },
+  "created_at": "2026-11-10T12:57:13.061838+00:00",
+  "findings": [
+    {
+      "category": "suid",
+      "confidence": "High",
+      "evidence": {
+        "group": "root",
+        "mode": "-rwsr-xr-x",
+        "owner": "root",
+        "path": "/opt/privesc-lab/find_suid"
+      },
+      "exploitation": "A non-standard SUID executable runs with root privileges. If it contains logic flaws, shell escapes, or relative library loads, a local user may escalate privileges.",
+      "fingerprint": "3dc8186423c136a0",
+      "id": "SUID-001",
+      "mitigation": "Remove the SUID bit if not required: chmod u-s /opt/privesc-lab/find_suid",
+      "module": "suid",
+      "references": [
+        "https://gtfobins.github.io/gtfobins/find/",
+        "https://attack.mitre.org/techniques/T1548/001/"
+      ],
+      "severity": "High",
+      "title": "Non-standard SUID binary found"
+    },
+    {
+      "category": "suid",
+      "confidence": "High",
+      "evidence": {
+        "binary": "find",
+        "functions": [
+          "suid",
+          "sudo"
+        ],
+        "path": "/opt/privesc-lab/find_suid"
+      },
+      "exploitation": "The executable has documented command execution or shell breakout capabilities when invoked with elevated privileges.",
+      "fingerprint": "4ad01276be15b07e",
+      "id": "SUID-002",
+      "mitigation": "Review GTFOBins documentation for find and remove SUID bit or restrict execution permissions.",
+      "module": "suid",
+      "references": [
+        "https://gtfobins.github.io/gtfobins/find/"
+      ],
+      "severity": "High",
+      "title": "SUID binary with known GTFOBins bypass found"
+    },
+    {
+      "category": "perms",
+      "confidence": "High",
+      "evidence": {
+        "mode": "-rw-rw-rw-",
+        "owner": "root",
+        "path": "/opt/privesc-lab/world_writable.conf"
+      },
+      "exploitation": "Any local account can alter this configuration file, potentially redirecting application flow, injecting arguments, or tampering with parameters read by root.",
+      "fingerprint": "a1674c179dca20c5",
+      "id": "PERM-001",
+      "mitigation": "Restrict write permissions to root or authorized group: chmod o-w /opt/privesc-lab/world_writable.conf",
+      "module": "perms",
+      "references": [
+        "https://attack.mitre.org/techniques/T1222/002/"
+      ],
+      "severity": "High",
+      "title": "World-writable configuration file"
+    },
+    {
+      "category": "perms",
+      "confidence": "High",
+      "evidence": {
+        "mode": "drwxrwxrwx",
+        "owner": "root",
+        "path": "/opt/privesc-lab/open_dir"
+      },
+      "exploitation": "Users can create, replace, or delete files owned by other users within this directory. If a privileged service relies on this directory, symlink or race attacks may occur.",
+      "fingerprint": "80750364ec606d72",
+      "id": "PERM-002",
+      "mitigation": "Apply the sticky bit (chmod +t) or remove world-write permissions (chmod o-w).",
+      "module": "perms",
+      "references": [
+        "https://attack.mitre.org/techniques/T1222/002/"
+      ],
+      "severity": "High",
+      "title": "World-writable directory without sticky bit"
+    },
+    {
+      "category": "sudo",
+      "confidence": "High",
+      "evidence": {
+        "commands": "/usr/bin/find, ALL",
+        "subject": "privlab"
+      },
+      "exploitation": "The specified user can run privileged commands without supplying a password. If broad or unconstrained, this allows immediate privilege boundary transitions.",
+      "fingerprint": "988666f81ba10493",
+      "id": "SUDO-001",
+      "mitigation": "Require password authentication and scope sudo permissions to specific commands and parameters.",
+      "module": "sudo",
+      "references": [
+        "https://attack.mitre.org/techniques/T1548/003/"
+      ],
+      "severity": "High",
+      "title": "Sudo NOPASSWD grant detected"
+    },
+    {
+      "category": "cron",
+      "confidence": "High",
+      "evidence": {
+        "owner": "privlab",
+        "path": "/opt/privesc-lab/backup.sh",
+        "source": "/etc/cron.d/privesc-lab",
+        "user": "root"
+      },
+      "exploitation": "A script executed periodically by root is writable by an unprivileged user. Any commands appended to the script will run with full root privileges on the next schedule.",
+      "fingerprint": "12bc99036e5cbb5b",
+      "id": "CRON-001",
+      "mitigation": "Change ownership of the script to root:root and set permissions to 0755 or 0700.",
+      "module": "cron",
+      "references": [
+        "https://attack.mitre.org/techniques/T1053/003/"
+      ],
+      "severity": "Critical",
+      "title": "Root cron job executes user-writable script"
+    },
+    {
+      "category": "services",
+      "confidence": "High",
+      "evidence": {
+        "exec": "/opt/privesc-lab/service.sh",
+        "owner": "privlab",
+        "unit": "privesc-lab.service"
+      },
+      "exploitation": "The system service runs as root but executes a script owned or writable by an unprivileged account. Modifying the script gives root code execution upon service activation.",
+      "fingerprint": "b8151c6885a9b2e3",
+      "id": "SVC-001",
+      "mitigation": "Set root ownership on the service script and restrict file write permissions.",
+      "module": "services",
+      "references": [
+        "https://attack.mitre.org/techniques/T1543/002/"
+      ],
+      "severity": "Critical",
+      "title": "Systemd service unit executes writable script as root"
+    },
+    {
+      "category": "caps",
+      "confidence": "High",
+      "evidence": {
+        "capabilities": "cap_setuid+ep",
+        "path": "/opt/privesc-lab/python_cap"
+      },
+      "exploitation": "The capability cap_setuid allows the process to arbitrarily change its UID to 0 (root). If attached to an interpreter or utility, full root escalation is trivial.",
+      "fingerprint": "e3d858640dfc4e61",
+      "id": "CAP-001",
+      "mitigation": "Remove unnecessary capabilities: setcap -r /opt/privesc-lab/python_cap",
+      "module": "caps",
+      "references": [
+        "https://man7.org/linux/man-pages/man7/capabilities.7.html"
+      ],
+      "severity": "High",
+      "title": "Binary with elevated Linux capabilities found"
+    },
+    {
+      "category": "kernel",
+      "confidence": "Medium",
+      "evidence": {
+        "cve": "CVE-2022-0847",
+        "kernel": "5.10.0-8-amd64",
+        "vulnerable_range": "5.8 <= version < 5.16.11"
+      },
+      "exploitation": "Local privilege escalation flaw in the Linux kernel (Dirty Pipe). Notice: Distribution kernels may contain backported fixes; verify against distribution vendor errata.",
+      "fingerprint": "78d1ca74b830e903",
+      "id": "KERN-001",
+      "mitigation": "Update kernel packages via apt/dnf and reboot into the latest security release.",
+      "module": "kernel",
+      "references": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2022-0847"
+      ],
+      "severity": "High",
+      "title": "Running kernel version matches known advisory range (Advisory)"
+    }
+  ],
+  "meta": {
+    "hostname": "kali-disposable-lab",
+    "kernel": "5.10.0-8-amd64",
+    "label": "sample_lab_scan",
+    "os": "Debian GNU/Linux (Kali Linux)",
+    "privilege": "limited",
+    "simulated_kernel": false,
+    "user": "privlab",
+    "wsl": false
+  },
+  "schema_version": 1,
+  "summary": {
+    "by_category": {
+      "caps": 1,
+      "cron": 1,
+      "kernel": 1,
+      "perms": 2,
+      "services": 1,
+      "sudo": 1,
+      "suid": 2
+    },
+    "by_severity": {
+      "Critical": 2,
+      "High": 7,
+      "Info": 0,
+      "Low": 0,
+      "Medium": 0
+    },
+    "overall_risk": "Critical",
+    "total": 9
+  },
+  "tool": {
+    "name": "Linux Privilege Escalation Automation Toolkit",
+    "version": "1.0.0"
+  }
+}

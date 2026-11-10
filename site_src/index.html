@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linux Privilege Escalation Automation Toolkit | Security Auditing Toolkit</title>
+  <meta name="description" content="A detection-only Linux security auditing toolkit for authorized privilege escalation assessments. Collects configuration evidence, applies explainable rules, and exports structured reports.">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Linux Privilege Escalation Automation Toolkit">
+  <meta property="og:description" content="Detection-only Linux security auditing toolkit for authorized systems. Pure parsers, explainable rules, zero payloads.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/architecture.png">
+
+  <!-- Inline Favicon SVG -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233FB950'><path d='M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z'/></svg>">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="container nav-inner">
+      <a href="index.html" class="brand" aria-label="Home">
+        <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+        <span>Linux Privesc Toolkit</span>
+      </a>
+      <button class="mobile-toggle" aria-label="Toggle Navigation Menu">☰</button>
+      <nav aria-label="Primary Navigation">
+        <ul class="nav-links">
+          <li><a href="#problem">The Problem</a></li>
+          <li><a href="#features">What It Checks</a></li>
+          <li><a href="#architecture">Architecture</a></li>
+          <li><a href="#demo">Demo</a></li>
+          <li><a href="#results">Results</a></li>
+          <li><a href="#safety">Safety</a></li>
+          <li><a href="#downloads">Downloads</a></li>
+          <li><a href="viewer.html" class="nav-btn">Report Viewer</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-badges">
+          <span class="badge badge-safety">🛡️ Detection Only · Zero Payloads</span>
+          <span class="badge badge-role">🎯 Red-Team Enumeration · Blue-Team Auditing</span>
+        </div>
+        <h1>Linux Privilege Escalation Automation Toolkit</h1>
+        <p class="tagline">An automated, explainable security scanner for authorized Linux privilege-boundary audits. Collects configuration evidence with read-only operations, maps facts to rule catalogs, and renders structured triage reports.</p>
+        
+        <div class="hero-meta">
+          Authored by <strong>Vansh Dhawan</strong> · <strong>Vecesta.co</strong> under <strong>Unified Mentor</strong> internship · <strong>10 November 2026</strong>
+        </div>
+
+        <div class="hero-actions">
+          <a href="viewer.html" class="btn btn-primary">🔍 Launch Report Viewer</a>
+          <a href="#downloads" class="btn btn-secondary">📥 Download Project Report</a>
+          <a href="#quickstart" class="btn btn-secondary">⚡ Quick Start</a>
+          <span id="repo-btn-slot"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- The Problem -->
+    <section id="problem">
+      <div class="container">
+        <div class="section-header">
+          <h2>The Privilege Escalation Problem</h2>
+          <p>Understanding how subtle configuration oversights create high-impact privilege boundary transitions.</p>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <h3>⚠️ The Security Gap</h3>
+            <p>Privilege escalation occurs when an unprivileged account or process gains access beyond its intended operational authority. Misconfigured SUID bits, permissive cron scripts, unconstrained sudo rules, or legacy kernel releases frequently bridge this gap on production Linux servers.</p>
+          </div>
+          <div class="card">
+            <h3>🔍 Auditing vs Exploitation</h3>
+            <p>Traditional penetration tools often attempt active exploitation, which risks service disruption or production instability. This toolkit enforces an explicit boundary: it captures file metadata and configuration text, applies transparent deterministic rules, and provides defensive remediation guidance without ever firing an exploit.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- What It Checks -->
+    <section id="features">
+      <div class="container">
+        <div class="section-header">
+          <h2>What It Checks</h2>
+          <p>Comprehensive inspection of the eight primary local privilege escalation attack surfaces.</p>
+        </div>
+        <div class="grid-4">
+          <div class="card">
+            <h3>⚙️ SUID / SGID</h3>
+            <p>Locates SUID/SGID binaries, cross-references against standard system allowlists, and highlights GTFOBins execution contexts.</p>
+          </div>
+          <div class="card">
+            <h3>📂 Permissions</h3>
+            <p>Scans world-writable files, sensitive configuration files (<code>/etc/passwd</code>, <code>/etc/shadow</code>), and vulnerable home directories.</p>
+          </div>
+          <div class="card">
+            <h3>⚡ Sudo Policies</h3>
+            <p>Inspects non-interactive sudo listing and sudoers drops-ins for <code>NOPASSWD</code> grants and broad command privileges.</p>
+          </div>
+          <div class="card">
+            <h3>⏰ Cron Automation</h3>
+            <p>Parses system cron tables, detecting user-writable root job targets, wildcard expansion traps, and relative binary paths.</p>
+          </div>
+          <div class="card">
+            <h3>🔧 systemd Services</h3>
+            <p>Inspects unit service files and drop-ins for root-privileged services executing writable scripts or insecure PATH entries.</p>
+          </div>
+          <div class="card">
+            <h3>🏷️ File Capabilities</h3>
+            <p>Queries extended file attributes via <code>getcap</code> to identify privilege-altering capabilities (e.g., <code>cap_setuid</code>).</p>
+          </div>
+          <div class="card">
+            <h3>🐧 Kernel Advisories</h3>
+            <p>Evaluates running kernel versions against known local privilege escalation CVEs (Dirty Pipe, Dirty COW) with distribution backport warnings.</p>
+          </div>
+          <div class="card">
+            <h3>👤 System Context</h3>
+            <p>Records host identity, user groups, effective privilege, and detects container or WSL environments to isolate mount traversals.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Architecture & Workflow -->
+    <section id="architecture">
+      <div class="container">
+        <div class="section-header">
+          <h2>Architecture & Data Flow</h2>
+          <p>Clean architectural separation: read-only collectors, pure parsers, analysis rules, and structured formatters.</p>
+        </div>
+        <div class="grid-2">
+          <div class="diagram-frame">
+            <h3>Component Architecture</h3>
+            <img src="assets/architecture.png" alt="Architecture diagram showing collectors, parsers, rules, and reports" loading="lazy">
+            <p style="margin-top:12px;font-size:0.9rem;color:var(--text-muted);">The safe command runner represents the only process execution boundary. Discovered binaries are never executed.</p>
+          </div>
+          <div class="diagram-frame">
+            <h3>Scan Execution Flow</h3>
+            <img src="assets/flowchart.png" alt="Scan workflow flowchart detailing the 8-step scan pipeline" loading="lazy">
+            <p style="margin-top:12px;font-size:0.9rem;color:var(--text-muted);">Sequential execution pipeline from system discovery to rule analysis and multi-format report export.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Demo Walk-Through -->
+    <section id="demo">
+      <div class="container">
+        <div class="section-header">
+          <h2>Disposable Lab & 3-Act Demo</h2>
+          <p>A reversible validation lifecycle designed to evaluate detection efficacy safely in a disposable environment.</p>
+        </div>
+        <div class="grid-3">
+          <div class="card">
+            <h3>Act 1: Clean Baseline</h3>
+            <p>Performs an initial audit of the target environment to record standard system configuration and identify any baseline findings before lab creation.</p>
+          </div>
+          <div class="card">
+            <h3>Act 2: Planted Weaknesses</h3>
+            <p>Creates 7 isolated, reversible misconfigurations (tracked in a strict manifest) and runs audits as root and as an unprivileged account.</p>
+          </div>
+          <div class="card">
+            <h3>Act 3: Teardown & Compare</h3>
+            <p>Purges all manifest-tracked lab files and user accounts, reruns the scan, and computes a differential comparison proving clean remediation.</p>
+          </div>
+        </div>
+
+        <div class="terminal-window">
+          <div class="terminal-titlebar">
+            <span class="terminal-dot dot-red"></span>
+            <span class="terminal-dot dot-yellow"></span>
+            <span class="terminal-dot dot-green"></span>
+            <span class="terminal-title">host-platform-guard-transcript</span>
+          </div>
+          <div class="terminal-body">
+            <img src="assets/screenshots/host_scan_skipped.png" class="terminal-img" alt="Terminal screenshot displaying the Windows host platform guard rejecting live scans" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Results (KPI Cards) -->
+    <section id="results">
+      <div class="container">
+        <div class="section-header">
+          <h2>Verification & Test Results</h2>
+          <p>Real test and verification evidence captured from the automated testing and verification pipelines.</p>
+        </div>
+
+        <div class="grid-4" style="margin-bottom:28px;">
+          <div class="stat-card">
+            <div class="stat-val" style="color:var(--accent-green);">30</div>
+            <div class="stat-label">Unit Tests Passed</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val" style="color:var(--accent-green);">9</div>
+            <div class="stat-label">Runner Safety Tests</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val" style="color:var(--accent-cyan);">100%</div>
+            <div class="stat-label">Allowlist Compliance</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val stat-draft">PENDING</div>
+            <div class="stat-label">Kali Linux Live Run</div>
+          </div>
+        </div>
+
+        <div class="info-box">
+          <h4>Notice: Draft Verification Mode</h4>
+          <p>Host-side parsers, analysis rules, safety models, and report formatters are fully validated with 30 passing tests. Full Linux privilege escalation findings and differential counts remain marked as <code>PENDING REAL RUN</code> until the one-command Kali Linux evidence bundle (<code>lab/collect_evidence.sh</code>) is ingested.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sample Reports -->
+    <section id="sample-reports">
+      <div class="container">
+        <div class="section-header">
+          <h2>Sample Audit Reports</h2>
+          <p>Explore real reports generated in JSON, Markdown, and self-contained HTML.</p>
+        </div>
+        <div class="grid-3">
+          <div class="card">
+            <h3>📄 HTML Report</h3>
+            <p>Self-contained, responsive audit document with color-coded severity chips and categorized findings.</p>
+            <div style="margin-top:14px;">
+              <a href="sample-reports/sample_scan.html" target="_blank" class="btn btn-secondary" style="font-size:0.85rem;padding:6px 12px;">View HTML Report ↗</a>
+            </div>
+          </div>
+          <div class="card">
+            <h3>📑 Markdown Report</h3>
+            <p>Clean, git-friendly Markdown document formatted for automated ticketing, documentation, or review.</p>
+            <div style="margin-top:14px;">
+              <a href="sample-reports/sample_scan.md" target="_blank" class="btn btn-secondary" style="font-size:0.85rem;padding:6px 12px;">View Markdown Report ↗</a>
+            </div>
+          </div>
+          <div class="card">
+            <h3>📊 JSON Scan Data</h3>
+            <p>Machine-readable JSON adhering to the standardized toolkit schema with complete evidence structures.</p>
+            <div style="margin-top:14px;">
+              <a href="viewer.html?report=sample_scan.json" class="btn btn-primary" style="font-size:0.85rem;padding:6px 12px;">Inspect in Viewer ↗</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Safety & Ethics -->
+    <section id="safety">
+      <div class="container">
+        <div class="section-header">
+          <h2>Safety Model & Ethical Bounds</h2>
+          <p>Engineered defensively to guarantee system integrity during auditing operations.</p>
+        </div>
+        <div class="grid-2">
+          <div>
+            <div class="card" style="margin-bottom:16px;">
+              <h3>🛡️ Strict Command Allowlist</h3>
+              <p><code>privesc/runner.py</code> enforces an unbypassable allowlist of read-only commands (<code>find</code>, <code>uname</code>, <code>id</code>, <code>getcap</code>, <code>crontab</code>, <code>sudo -n -l</code>, <code>systemctl cat</code>). Dangerous flags like <code>-exec</code> or <code>-delete</code> are rejected immediately.</p>
+            </div>
+            <div class="card" style="margin-bottom:16px;">
+              <h3>🚫 Zero Payloads & Zero Exploitation</h3>
+              <p>The codebase contains zero shellcode, exploit payloads, or breakout commands. Findings provide defensive remediation steps and references.</p>
+            </div>
+            <div class="card">
+              <h3>🔒 Runtime Hash Integrity Proof</h3>
+              <p>The automated demo captures cryptographic SHA-256 hashes of critical security files (<code>/etc/passwd</code>, <code>/etc/group</code>, <code>/etc/shadow</code>, <code>/etc/sudoers</code>) before and after every scan to prove no tampering occurs.</p>
+            </div>
+          </div>
+          <div>
+            <div class="alert-box">
+              <h4>⚠️ Authorized Use Policy</h4>
+              <p>This toolkit is strictly intended for authorized security evaluations, defensive posture reviews, and academic demonstrations on systems where you possess explicit, written permission from the system owner.</p>
+              <p style="margin-top:10px;">Unauthorized scanning or privilege testing against third-party networks or systems violates computer security laws and professional codes of conduct. The authors assume no liability for unauthorized usage.</p>
+            </div>
+            <div class="card" style="margin-top:16px;">
+              <h3>⚠️ Operational Limitations</h3>
+              <ul style="padding-left:20px;color:var(--text-muted);font-size:0.92rem;line-height:1.7;">
+                <li><strong>Distribution Backports:</strong> Kernel CVE matching compares version strings. Enterprise distributions backport patches without incrementing the base version number; findings are advisory.</li>
+                <li><strong>Limited Account Visibility:</strong> Unprivileged scans cannot read protected files (<code>/etc/shadow</code>). Such paths are explicitly reported as skipped.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tech Stack -->
+    <section id="tech-stack">
+      <div class="container">
+        <div class="section-header">
+          <h2>Technology Stack</h2>
+          <p>Zero runtime dependencies on production targets; standardized dev tooling.</p>
+        </div>
+        <div class="grid-4">
+          <div class="card">
+            <h3>Python 3.10+</h3>
+            <p>Standard library only for runtime scanner. Zero pip package dependencies required on target systems.</p>
+          </div>
+          <div class="card">
+            <h3>Bash Shell</h3>
+            <p>POSIX-compliant shell automation for runner wrappers, preflight checks, and disposable lab lifecycle.</p>
+          </div>
+          <div class="card">
+            <h3>pytest</h3>
+            <p>Deterministic fixture suite testing pure parsers, rules, safety boundaries, and CLI operations.</p>
+          </div>
+          <div class="card">
+            <h3>Office Automation</h3>
+            <p>python-docx and python-pptx for automated generation of technical reports and presentation slide decks.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Run It Yourself -->
+    <section id="quickstart">
+      <div class="container">
+        <div class="section-header">
+          <h2>Run It Yourself</h2>
+          <p>Quick start instructions for running the toolkit on authorized Linux systems.</p>
+        </div>
+        
+        <div class="terminal-window">
+          <div class="terminal-titlebar">
+            <span class="terminal-dot dot-red"></span>
+            <span class="terminal-dot dot-yellow"></span>
+            <span class="terminal-dot dot-green"></span>
+            <span class="terminal-title">bash — quickstart</span>
+            <button class="btn btn-secondary copy-btn" data-target="code-quickstart" style="margin-left:auto;font-size:0.75rem;padding:4px 8px;">Copy</button>
+          </div>
+          <div class="terminal-body">
+            <pre id="code-quickstart"><code># 1. Clone repository
+git clone &lt;repository-url&gt;
+cd linux-privesc-toolkit
+
+# 2. Run a fast audit scan (pruning pseudo and remote filesystems)
+python3 privesc_scan.py scan --fast --label audit_01
+
+# 3. View generated reports
+ls -la reports/
+# reports/scan_audit_01.json
+# reports/scan_audit_01.md
+# reports/scan_audit_01.html
+
+# 4. Compare before and after hardening
+python3 privesc_scan.py compare reports/scan_before.json reports/scan_after.json</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Downloads -->
+    <section id="downloads">
+      <div class="container">
+        <div class="section-header">
+          <h2>Downloads & Artifacts</h2>
+          <p>Access generated documentation, reports, and presentation decks.</p>
+        </div>
+        <div class="grid-3">
+          <div class="card">
+            <h3>📄 Comprehensive Report</h3>
+            <p>Complete 23-page technical report covering architecture, safety models, lab results, and remediation guidance.</p>
+            <div style="margin-top:16px;">
+              <a href="downloads/Project_Report.docx" class="btn btn-primary" style="font-size:0.85rem;padding:6px 14px;">Download Report (DOCX)</a>
+            </div>
+          </div>
+          <div class="card">
+            <h3>📊 Presentation Deck</h3>
+            <p>15-slide widescreen presentation deck formatted in dark terminal theme with comprehensive speaker notes.</p>
+            <div style="margin-top:16px;">
+              <a href="downloads/Final_Presentation.pptx" class="btn btn-secondary" style="font-size:0.85rem;padding:6px 14px;">Download Deck (PPTX)</a>
+            </div>
+          </div>
+          <div class="card">
+            <h3>📦 Kali Handoff Bundle</h3>
+            <p>Self-contained package containing all scripts, parsers, and the one-command collector for Kali Linux VM testing.</p>
+            <div style="margin-top:16px;">
+              <a href="viewer.html" class="btn btn-secondary" style="font-size:0.85rem;padding:6px 14px;">Launch Interactive Viewer</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <div style="font-weight:700;color:var(--text-primary);margin-bottom:4px;">Linux Privilege Escalation Automation Toolkit</div>
+        <div>Authored by <strong>Vansh Dhawan</strong> · <strong>Vecesta.co</strong> · <strong>Unified Mentor</strong></div>
+      </div>
+      <div>
+        <div>Released under the <a href="https://opensource.org/licenses/MIT" target="_blank" rel="noopener noreferrer">MIT License</a> · 10 November 2026</div>
+        <div id="footer-repo-slot" style="margin-top:4px;"></div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    // Dynamically insert repository link if configured
+    fetch("build_info.json")
+      .then(res => res.json())
+      .then(info => {
+        if (info.repo_url) {
+          const btnSlot = document.getElementById("repo-btn-slot");
+          if (btnSlot) {
+            btnSlot.innerHTML = `<a href="${info.repo_url}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">View on GitHub ↗</a>`;
+          }
+          const footerSlot = document.getElementById("footer-repo-slot");
+          if (footerSlot) {
+            footerSlot.innerHTML = `<a href="${info.repo_url}" target="_blank" rel="noopener noreferrer">GitHub Repository ↗</a>`;
+          }
+        }
+      })
+      .catch(() => {});
+  </script>
+</body>
+</html>

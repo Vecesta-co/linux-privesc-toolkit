@@ -9,9 +9,11 @@ dist/
 *.egg-info/
 reports/*
 !reports/.gitkeep
+!reports/sample_scan.*
 logs/*
 !logs/.gitkeep
 evidence/scratch/
 evidence/*.tmp
 incoming/*
 !incoming/.gitkeep
+site/
