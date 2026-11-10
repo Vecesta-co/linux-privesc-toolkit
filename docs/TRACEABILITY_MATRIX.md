@@ -1,4 +1,12 @@
-# Traceability matrix
+# Traceability Matrix
+
+**Author:** Vansh Dhawan
+**Company:** Vecesta.co
+**Internship:** Unified Mentor
+**Date:** 10 November 2026
+**Project:** Linux Privilege Escalation Automation Toolkit
+
+---
 
 | Requirement | Feature | Test | Evidence |
 |---|---|---|---|

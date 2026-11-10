@@ -1,8 +1,11 @@
 # Independent QA Audit Findings
 
-**Audit Date:** 2026-11-09  
-**Auditor:** Independent QA / Security Engineering Lead  
-**Scope:** Linux Privilege Escalation Automation Toolkit (`linux-privesc-toolkit`)  
+**Author:** Vansh Dhawan
+**Company:** Vecesta.co
+**Internship:** Unified Mentor
+**Audit Date:** 2026-11-09
+**Auditor:** Independent QA / Security Engineering Lead
+**Scope:** Linux Privilege Escalation Automation Toolkit (`linux-privesc-toolkit`)
 **Methodology:** Zero-trust verification; assume nothing works until executed and observed.
 
 ---

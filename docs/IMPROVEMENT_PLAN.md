@@ -1,6 +1,9 @@
 # Improvement Plan
 
-**Date:** 2026-11-09  
+**Author:** Vansh Dhawan
+**Company:** Vecesta.co
+**Internship:** Unified Mentor
+**Date:** 2026-11-09
 **Based on:** `docs/AUDIT_FINDINGS.md`
 
 ---

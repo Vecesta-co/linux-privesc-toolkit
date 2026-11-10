@@ -1,5 +1,13 @@
 # Decisions
 
+**Author:** Vansh Dhawan
+**Company:** Vecesta.co
+**Internship:** Unified Mentor
+**Date:** 10 November 2026
+**Project:** Linux Privilege Escalation Automation Toolkit
+
+---
+
 ## Runtime and environment
 
 - The scanner targets Python 3.10+ and uses only the standard library at runtime.

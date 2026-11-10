@@ -194,7 +194,7 @@ def make_docx(folder, data):
     r = p.add_run("Detection-only Linux enumeration and security auditing"); r.font.size = Pt(16); r.font.color.rgb = RGBColor.from_string("1F6FEB")
     para("Red-team enumeration · Blue-team auditing")
     para("")
-    para("Author: Vansh Dhawan"); para("Company: Vecesta.co"); para("Supervisor: [Supervisor]"); para("Date: 10 November 2026")
+    para("Author: Vansh Dhawan"); para("Company: Vecesta.co"); para("Internship: Unified Mentor"); para("Date: 10 November 2026")
     para("Internship project report")
     new_page()
 
@@ -524,7 +524,7 @@ def make_presentation(folder, data):
     slide = setup("", 1)
     add_text(slide, "Linux Privilege\nEscalation Automation Toolkit", .72, 1.55, 8.2, 1.55, 39, C["text"], True)
     add_text(slide, "Red-team enumeration · Blue-team auditing", .77, 3.45, 7.4, .52, 19, C["cyan"], True)
-    add_text(slide, "Vansh Dhawan  ·  Vecesta.co  ·  Supervisor: [Supervisor]  ·  10 November 2026", .77, 4.25, 9.8, .4, 15, C["muted"])
+    add_text(slide, "Vansh Dhawan  ·  Vecesta.co  ·  Unified Mentor  ·  10 November 2026", .77, 4.25, 9.8, .4, 15, C["muted"])
     add_box(slide, 9.6, 1.65, 2.35, 2.35, C["card"], C["edge"]); add_text(slide, "READ\nONLY", 9.85, 2.08, 1.85, 1.0, 26, C["green"], True, align=PP_ALIGN.CENTER)
     slide.notes_slide.notes_text_frame.text = notes[0]
 

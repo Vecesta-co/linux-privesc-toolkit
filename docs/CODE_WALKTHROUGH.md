@@ -1,4 +1,12 @@
-# Code walkthrough
+# Code Walkthrough
+
+**Author:** Vansh Dhawan
+**Company:** Vecesta.co
+**Internship:** Unified Mentor
+**Date:** 10 November 2026
+**Project:** Linux Privilege Escalation Automation Toolkit
+
+---
 
 ## Scanner source
 
