@@ -18,9 +18,9 @@ Designed for dual-use in red-team enumeration and blue-team auditing practice.
 
 ## Live Demo & Documentation Site
 
-- **Live Documentation & Report Viewer:** `https://YOUR-USERNAME.github.io/linux-privesc-toolkit/` *(link active after GitHub Pages deployment)*
-- **Interactive Report Viewer Direct Link:** `https://YOUR-USERNAME.github.io/linux-privesc-toolkit/viewer.html`
-- **GitHub Repository:** `https://github.com/YOUR-USERNAME/linux-privesc-toolkit`
+- **Live Documentation & Report Viewer:** `https://Vecesta-co.github.io/linux-privesc-toolkit/` *(link active after GitHub Pages deployment)*
+- **Interactive Report Viewer Direct Link:** `https://Vecesta-co.github.io/linux-privesc-toolkit/viewer.html`
+- **GitHub Repository:** `https://github.com/Vecesta-co/linux-privesc-toolkit`
 - *Note:* Run `python tools/set_live_url.py <live_url> <repo_url>` after creating your GitHub repository to update these links across the project automatically.
 
 ---
