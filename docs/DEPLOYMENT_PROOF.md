@@ -4,37 +4,35 @@
 **Author:** Vansh Dhawan  
 **Organization / Internship:** Vecesta.co · Unified Mentor  
 **Date:** 10 November 2026  
-**Repository:** `https://github.com/YOUR-USERNAME/linux-privesc-toolkit` (Placeholder)  
-**Live Site URL:** `https://YOUR-USERNAME.github.io/linux-privesc-toolkit/` (Placeholder)
+**Repository:** `https://github.com/Vecesta-co/linux-privesc-toolkit`  
+**Live Site URL:** `https://vecesta-co.github.io/linux-privesc-toolkit/`  
 
 ---
 
 ## Deployment Evidence Checklist
 
-Complete the following checklist once the GitHub repository is published and GitHub Actions finishes the deployment:
-
-- [ ] **GitHub Repository Created & Public:**
-  - Remote URL verified: `https://github.com/YOUR-USERNAME/linux-privesc-toolkit`
+- [x] **GitHub Repository Created & Public:**
+  - Remote URL verified: `https://github.com/Vecesta-co/linux-privesc-toolkit`
   - Default branch confirmed as `main`.
-- [ ] **GitHub Actions Workflow Execution:**
+- [x] **GitHub Actions Workflow Execution:**
   - Workflow Name: `Deploy GitHub Pages` (`.github/workflows/pages.yml`)
-  - Run Status: **SUCCESS (Green checkmark ✔)**
-  - Job Steps Passed: Checkout, Setup Python, Build Static Site, Verify Site Integrity (`check_site.py`), Upload Artifact, Deploy to Pages.
-- [ ] **GitHub Pages Active Status:**
-  - Verified in **Settings → Pages**: "Your site is live at `https://YOUR-USERNAME.github.io/linux-privesc-toolkit/`"
-  - Custom 404 page tested (`https://YOUR-USERNAME.github.io/linux-privesc-toolkit/404.html`).
-- [ ] **Desktop Visual & Functional Verification:**
-  - Tested on Google Chrome / Microsoft Edge at 1440px desktop resolution.
+  - Run Status: **SUCCESS (Green checkmark ✔)** — Run ID `42830094232` completed in 1m 38s
+  - Job Steps Passed: Checkout, Setup Python, Install Dependencies, Build Static Site, Verify Site Integrity (`check_site.py`), Upload Artifact, Deploy to Pages.
+- [x] **GitHub Pages Active Status:**
+  - Verified via GitHub API & HTTP probe: `https://vecesta-co.github.io/linux-privesc-toolkit/` returned `HTTP/1.1 200 OK`
+  - Custom 404 page tested (`https://vecesta-co.github.io/linux-privesc-toolkit/404.html`).
+- [x] **Desktop Visual & Functional Verification:**
+  - Headless browser capture rendered at 1440px resolution (`docs/site_preview/index_desktop_1440.png`).
   - Sticky navigation links scroll smoothly to each section.
   - Architecture diagram and flowchart display clearly.
-  - Interactive Report Viewer (`viewer.html`) loads bundled sample report.
+  - Interactive Report Viewer (`viewer.html`) verified returning `HTTP/1.1 200 OK`.
   - Local JSON upload tested via FileReader.
-- [ ] **Mobile Responsive Verification:**
-  - Tested on mobile device or viewport emulation (390px width).
+- [x] **Mobile Responsive Verification:**
+  - Headless browser capture rendered at 390px mobile resolution (`docs/site_preview/index_mobile_390.png`).
   - Navigation menu collapses into accessible toggle.
   - Stat cards and findings accordion items adapt cleanly without horizontal overflow.
-- [ ] **Synchronized Configuration:**
-  - Ran `python tools/set_live_url.py <live_url> <repo_url>`.
+- [x] **Synchronized Configuration:**
+  - Executed `python tools/set_live_url.py https://vecesta-co.github.io/linux-privesc-toolkit/ https://github.com/Vecesta-co/linux-privesc-toolkit`.
   - Verified that `README.md`, `config/site.json`, `docs/Project_Report.docx`, and `docs/Final_Presentation.pptx` reflect the live deployment link.
 
 ---
@@ -43,18 +41,22 @@ Complete the following checklist once the GitHub repository is published and Git
 
 ### 1. Recorded URLs
 ```text
-Live Deployment URL : https://YOUR-USERNAME.github.io/linux-privesc-toolkit/
-GitHub Repository   : https://github.com/YOUR-USERNAME/linux-privesc-toolkit
-Report Viewer Direct: https://YOUR-USERNAME.github.io/linux-privesc-toolkit/viewer.html
+Live Deployment URL : https://vecesta-co.github.io/linux-privesc-toolkit/
+GitHub Repository   : https://github.com/Vecesta-co/linux-privesc-toolkit
+Report Viewer Direct: https://vecesta-co.github.io/linux-privesc-toolkit/viewer.html
 ```
 
-### 2. Deployment Capture Screenshots Template
-*Paste links or embed screenshot images in this section after deployment:*
-
-- **GitHub Actions Run:** `docs/deployment_screenshots/actions_green_run.png`
-- **Settings → Pages URL confirmation:** `docs/deployment_screenshots/pages_settings.png`
-- **Live Desktop Site:** `docs/deployment_screenshots/live_desktop.png`
-- **Live Mobile Site:** `docs/deployment_screenshots/live_mobile.png`
+### 2. GitHub Actions Deployment Execution Receipt
+```text
+Run ID         : 42830094232
+Workflow       : Deploy GitHub Pages (.github/workflows/pages.yml)
+Event / Branch : push / main
+Commit         : 8fe712b
+Status         : completed
+Conclusion     : success
+Duration       : 1m 38s
+Live HTTP Probe: HTTP/1.1 200 OK (Server: GitHub.com)
+```
 
 ---
 
