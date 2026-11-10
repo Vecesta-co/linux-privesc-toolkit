@@ -1,27 +1,53 @@
-# Linux test guide
+# Linux Test Guide (Kali Linux & WSL)
 
-The current host has no configured WSL distribution. The supplied Kali VirtualBox guest is powered off when this project is delivered because its Guest Additions control session was unavailable before a user logged in. The lab remains unrun until you open the Kali VM, log in as `kali`, and run the commands below in a terminal inside the guest.
+This document provides quick reference instructions for executing and evaluating the **Linux Privilege Escalation Automation Toolkit** on real Linux systems.
 
-The repository must be copied to the guest's ext4 home directory before the lab runs. Do not run the lab directly from a VirtualBox shared folder: the lab and its scans must be on a Linux filesystem with real ownership and permission bits. After copying the folder into `~/linux-privesc-toolkit`, use:
+---
+
+## Primary Testing Target: Kali Linux VirtualBox VM
+
+The designated environment is the Kali Linux 2026.3 VirtualBox VM (stored on host at `C:\CyberSecurity\kali-linux-2026.3-virtualbox-amd64`).
+
+For complete, step-by-step instructions on transferring the handoff package, running evidence collection, and retrieving the results, see:
+👉 **[`docs/KALI_HANDOFF_GUIDE.md`](KALI_HANDOFF_GUIDE.md)**
+
+### Fast Copy-Paste Commands (Inside Kali VM)
 
 ```bash
+# 1. Download handoff package from Windows host (run: python -m http.server 8000 --directory dist on Windows)
+mkdir -p ~/linux-privesc-toolkit
 cd ~/linux-privesc-toolkit
-python3 -m venv .venv
-. .venv/bin/activate
-python3 -m pip install -r requirements-dev.txt
-python3 -m pytest -q
-bash lab/run_lab_demo.sh --out evidence/run1 --pace 3
-python3 tools/verify_all.py evidence/run1
-bash lab/run_lab_demo.sh --out evidence/run2 --pace 3
-python3 tools/verify_all.py evidence/run2
-python3 run_scan.sh --help
-bash run_scan.sh --label manual --fast --output-dir reports/manual
+wget http://10.0.2.2:8000/linux-privesc-toolkit-handoff.zip
+unzip -q linux-privesc-toolkit-handoff.zip
+
+# 2. Run the automated all-in-one evidence collector
+bash lab/collect_evidence.sh --yes
+
+# 3. The bundle is created at ~/privesc_evidence_bundle_<timestamp>.zip
+# Copy it to your Windows host project's incoming/ directory.
 ```
 
-The demo refuses to plant the lab unless it runs as root and supplies the explicit disposable-lab confirmation flag internally. It tears down the lab on exit and writes the command transcript, reports, comparisons, before/after hashes, independent checks, and teardown check under the chosen evidence directory. Verify both runs before bringing them back. A second demo starts from the guest's clean state after the first demo's teardown.
+---
 
-## Optional WSL setup
+## Secondary Alternative: Ubuntu on Windows WSL
 
-If you prefer WSL instead of the Kali VM, install Ubuntu through Windows' documented WSL setup, complete its first-run account setup, then copy this repository into the WSL ext4 home (not `/mnt/c`). Open Ubuntu, `cd` into that copy, and run the same Linux commands above. This project does not install WSL or Docker for you.
+If WSL is installed on your Windows machine:
+```bash
+# Inside WSL terminal:
+cd ~
+cp -r /mnt/c/Users/.../dist/linux-privesc-toolkit-handoff.zip .
+unzip -q linux-privesc-toolkit-handoff.zip -d linux-privesc-toolkit
+cd linux-privesc-toolkit
+bash lab/collect_evidence.sh --yes
+cp ~/privesc_evidence_bundle_*.zip /mnt/c/Users/.../incoming/
+```
 
-If guest control becomes available after logging into Kali, host-side copy and evidence transfer can use VirtualBox Guest Control. `VBoxManage guestcontrol` supports recursive `copyto` and `copyfrom`; use the Kali VM name shown in VirtualBox and the `kali` account. Keep the project inside `/home/kali` while running scans and copy the resulting evidence folder back to the Windows project after teardown.
+---
+
+## Verification on Windows
+
+After placing the evidence bundle in `incoming/`, run:
+```powershell
+python tools/ingest_evidence.py incoming/privesc_evidence_bundle_<timestamp>.zip
+```
+This automatically verifies hashes, unpacks evidence, executes `verify_all.py`, renders terminal screenshots, and produces `evidence/INGEST_REPORT.md`.

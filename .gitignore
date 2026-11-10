@@ -13,4 +13,5 @@ logs/*
 !logs/.gitkeep
 evidence/scratch/
 evidence/*.tmp
-docs/ppt_preview/*.tmp
+incoming/*
+!incoming/.gitkeep
