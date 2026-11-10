@@ -6,11 +6,13 @@ PROJECT_ROOT="$(cd -- "$SCRIPT_DIR/.." && pwd)"
 OUT=evidence/run1
 PACE=0
 NO_COLOR=0
+YES_FLAG=""
 while (($#)); do
   case "$1" in
     --out) OUT=${2:?--out needs a directory}; shift 2 ;;
     --pace) PACE=${2:?--pace needs seconds}; shift 2 ;;
     --no-color) NO_COLOR=1; shift ;;
+    --yes-i-am-in-a-disposable-lab) YES_FLAG="--yes-i-am-in-a-disposable-lab"; shift ;;
     *) echo "Unknown option: $1" >&2; exit 2 ;;
   esac
 done
