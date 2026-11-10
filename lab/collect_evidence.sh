@@ -321,3 +321,4 @@ if [[ "$ANY_FAIL" -ne 0 ]]; then
 fi
 
 exit 0
+

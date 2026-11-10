@@ -68,3 +68,4 @@ else
   echo "Interrupt safety test FAILED: leftover artifacts detected."
   exit 1
 fi
+

@@ -97,3 +97,4 @@ def build_handoff_zip() -> tuple[Path, str]:
 
 if __name__ == "__main__":
     build_handoff_zip()
+

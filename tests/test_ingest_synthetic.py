@@ -110,9 +110,10 @@ def test_ingest_synthetic_bundle_passes():
                     arc = "evidence/" + f.relative_to(ev_dir).as_posix()
                     zf.write(f, arc)
 
-        # Ingest against a test staging root
-        # We test that running ingest_evidence.py on synthetic_zip returns 0
-        cmd = [sys.executable, str(ingest_script), str(synthetic_zip)]
+        # Ingest against an isolated staging directory in temp
+        isolated_dest = tmp / "ingested_evidence"
+        cmd = [sys.executable, str(ingest_script), str(synthetic_zip), "--dest", str(isolated_dest)]
         res = subprocess.run(cmd, capture_output=True, text=True)
         assert res.returncode == 0, f"ingest_evidence failed: {res.stderr}\n{res.stdout}"
-        assert "Overall Ingest Result: ALL CHECKS PASSED" in res.stdout or (root / "evidence" / "INGEST_REPORT.md").read_text(encoding="utf-8").find("ALL CHECKS PASSED") != -1
+        assert "Overall Ingest Result: ALL CHECKS PASSED" in res.stdout or (isolated_dest / "INGEST_REPORT.md").read_text(encoding="utf-8").find("ALL CHECKS PASSED") != -1
+

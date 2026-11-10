@@ -4,6 +4,11 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Safety: Detection Only](https://img.shields.io/badge/safety-detection--only-green.svg)](docs/DECISIONS.md)
 
+**Author:** Vansh Dhawan  
+**Company:** Vecesta.co  
+**Internship:** Unified Mentor  
+**Date:** 10 November 2026  
+
 A detection-only Linux security auditing toolkit for authorized systems. The toolkit inspects configuration evidence, applies small, explainable rules, and exports structured reports in JSON, Markdown, and self-contained HTML. It **never exploits**, **never modifies system files**, and **never executes payloads**.
 
 Designed for dual-use in red-team enumeration and blue-team auditing practice.
@@ -100,6 +105,35 @@ linux-privesc-toolkit/
   - `Pillow` (terminal screenshot rendering)
   - `matplotlib` (flowchart and architecture diagrams)
   - `pymupdf` (PDF page rasterization)
+
+---
+
+## Kali Linux Evidence Collection Quick Start
+
+For automated evidence collection on a disposable Kali Linux VirtualBox VM or native Linux host:
+
+```bash
+# 1. Unzip the handoff package or clone the repository on Kali Linux
+unzip linux-privesc-toolkit-handoff.zip -d linux-privesc-toolkit
+cd linux-privesc-toolkit
+
+# 2. Run the one-command evidence collector (checks preflight, pytest, runs demo 1 & 2, packages bundle)
+sudo bash lab/collect_evidence.sh --yes
+
+# 3. Transfer the generated evidence-bundle-*.zip back to host incoming/ folder
+# On host Windows machine, ingest and verify:
+python tools/ingest_evidence.py incoming/evidence-bundle-*.zip
+python tools/make_docs.py --final
+```
+
+Detailed transfer methods and troubleshooting instructions are documented in [docs/KALI_HANDOFF_GUIDE.md](docs/KALI_HANDOFF_GUIDE.md).
+
+---
+
+## Tested On
+
+- **Host (Development & Unit Verification):** Windows 11, Python 3.11.9 (all 29 unit & safety tests PASS, 1 Linux-only integration test skipped as expected).
+- **Target Linux System (Evidence Collection):** PENDING REAL RUN — to be filled from `evidence/env_info.txt` after Kali Linux evidence collection bundle ingestion.
 
 ---
 
@@ -258,4 +292,4 @@ pytest tests/ -v
 ## License
 
 This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
-Replace `[Your Name]` in `LICENSE` before submission.
+

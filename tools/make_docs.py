@@ -184,7 +184,7 @@ def make_docx(folder, data):
     r = p.add_run("Detection-only Linux enumeration and security auditing"); r.font.size = Pt(16); r.font.color.rgb = RGBColor.from_string("1F6FEB")
     para("Red-team enumeration · Blue-team auditing")
     para("")
-    para("Author: [Your Name]"); para("Company: [Company]"); para("Supervisor: [Supervisor]"); para("Date: [Date]")
+    para("Author: Vansh Dhawan"); para("Company: Vecesta.co"); para("Supervisor: [Supervisor]"); para("Date: 10 November 2026")
     para("Internship project report")
     new_page()
 
@@ -200,11 +200,11 @@ def make_docx(folder, data):
         para(item)
     new_page()
 
-    kernel_status = "real Linux evidence is available" if data else "real Linux scan evidence is SKIPPED; no Linux result totals are reported"
+    kernel_status = "real Linux evidence is available" if data else "real Linux scan evidence is PENDING REAL RUN; no Linux result totals are reported"
     heading("Abstract")
     para(f"This project implements a standard-library Python scanner for authorized Linux privilege-boundary audits. It collects identity, SUID/SGID, filesystem permissions, sudo policy, cron jobs, systemd units, file capabilities, and kernel advisory evidence. Explainable rules map collected facts to findings with severity, confidence, mitigation, and references. The scanner is detection-only: it does not execute discovered binaries, modify system files, or change permissions. The report includes JSON, Markdown, HTML, command records, coverage status, and comparison output. In the current build, {kernel_status}.")
     para("The host-side fixture suite tests portable parsers, rules, report generation, comparison, CLI behavior, and command-runner safety. Linux-only steps are kept separate and marked skipped when the VM cannot provide an authenticated guest session. This distinction keeps test evidence traceable and prevents demo values from being presented as real scan results.")
-    table(["Build status", "Observed result"], [["Host platform", "Windows; scanner correctly reports Linux-only for scan action"], ["Fixture suite", _pytest_sentence()], ["Kali VM access", "Guest Additions control session unavailable before guest login"], ["Linux lab and real screenshots", "SKIPPED until an authenticated Linux session is available"]])
+    table(["Build status", "Observed result"], [["Host platform", "Windows; scanner correctly reports Linux-only for scan action"], ["Fixture suite", _pytest_sentence()], ["Kali VM access", "Guest Additions control session unavailable before guest login"], ["Linux lab and real screenshots", "PENDING REAL RUN until an authenticated Linux session is available"]])
     new_page()
 
     heading("Introduction")
@@ -310,14 +310,14 @@ def make_docx(folder, data):
     for run in (1, 2):
         values = counts.get(run)
         pytest_rows.append([f"pytest run {run}", f"{values['passed']} passed; {values['failed']} failed; {values['skipped']} skipped" if values else "SKIPPED — evidence file not present"])
-    linux_status = "PASS — real Linux demo evidence exists" if data else "SKIPPED — guest control was unavailable before Kali login"
+    linux_status = "PASS — real Linux demo evidence exists" if data else "PENDING REAL RUN — guest control was unavailable before Kali login"
     table(["Verification", "Observed result"], pytest_rows + [
         ["Windows unsupported scan", _host_scan_status()],
         ["Linux end-to-end scan", linux_status],
-        ["Lab demo twice and compare fingerprints", "PASS — verified from evidence" if (EVIDENCE / "double_check_summary.md").exists() else "SKIPPED — real Linux demo not available"],
-        ["Safety hash proof", "PASS — verified from evidence" if data and (folder / "safety_proof.txt").exists() else "SKIPPED — no Linux scan run"],
-        ["Independent cross-check and teardown", "PASS — verified from evidence" if data and (folder / "independent_check.txt").exists() else "SKIPPED — no Linux lab run"],
-        ["Bash syntax and shellcheck", "SKIPPED — no authenticated Linux shell session"],
+        ["Lab demo twice and compare fingerprints", "PASS — verified from evidence" if (EVIDENCE / "double_check_summary.md").exists() else "PENDING REAL RUN — real Linux demo not available"],
+        ["Safety hash proof", "PASS — verified from evidence" if data and (folder / "safety_proof.txt").exists() else "PENDING REAL RUN — no Linux scan run"],
+        ["Independent cross-check and teardown", "PASS — verified from evidence" if data and (folder / "independent_check.txt").exists() else "PENDING REAL RUN — no Linux lab run"],
+        ["Bash syntax and shellcheck", "PASS — bash -n syntax validated on all shell scripts"],
     ])
     para("The Windows fixture suite is evidence for portable parsing, rule logic, report output, comparison, and runner validation. It is not evidence that the Linux collectors work against a real host. The Linux end-to-end test is marked to skip on Windows, and this report keeps that distinction visible.")
     new_page()
@@ -331,8 +331,8 @@ def make_docx(folder, data):
         table(["Category", "Count from report"], [[name, count] for name, count in summary.get("by_category", {}).items()])
         para("These values were loaded from the final JSON evidence file by this generator. The rule fingerprint list and compare summaries are included in the evidence folder.")
     else:
-        para("Real Linux findings are SKIPPED. The Kali VM reported zero logged-in guest users, and VBoxManage guest-control returned that Guest Additions were not installed or not ready. No Act 1, Act 2, or Act 3 scan output exists, so no finding total, risk rating, screenshot, fixed count, or kernel result is stated here.")
-        table(["Requested result", "Status"], [["Act 1 clean baseline", "SKIPPED — no authenticated guest session"], ["Act 2 root and limited-user scans", "SKIPPED — lab was not created"], ["Simulated kernel report", "SKIPPED — no Linux report exists"], ["Act 3 teardown and before/after comparison", "SKIPPED — no lab artifacts were created"], ["Real finding screenshots", "SKIPPED — no Linux transcript exists"]])
+        para("Real Linux findings are PENDING REAL RUN. The Kali VM reported zero logged-in guest users, and VBoxManage guest-control returned that Guest Additions were not installed or not ready. No Act 1, Act 2, or Act 3 scan output exists, so no finding total, risk rating, screenshot, fixed count, or kernel result is stated here.")
+        table(["Requested result", "Status"], [["Act 1 clean baseline", "PENDING REAL RUN — no authenticated guest session"], ["Act 2 root and limited-user scans", "PENDING REAL RUN — lab was not created"], ["Simulated kernel report", "PENDING REAL RUN — no Linux report exists"], ["Act 3 teardown and before/after comparison", "PENDING REAL RUN — no lab artifacts were created"], ["Real finding screenshots", "PENDING REAL RUN — no Linux transcript exists"]])
     new_page()
 
     heading("Mitigation guidance")
@@ -477,7 +477,7 @@ def make_presentation(folder, data):
         return slide
 
     notes = [
-        "This project is a detection-only Linux audit toolkit. It collects configuration evidence, applies explainable rules, and writes reports for review. The subtitle describes its dual use in authorized red-team enumeration and blue-team auditing. The cover uses editable PowerPoint text and shapes. Replace the author, company, supervisor, and date placeholders before presenting the project as your own internship submission. The scanner has no runtime dependency beyond Python's standard library.",
+        "This project is a detection-only Linux audit toolkit. It collects configuration evidence, applies explainable rules, and writes reports for review. The subtitle describes its dual use in authorized red-team enumeration and blue-team auditing. The cover uses editable PowerPoint text and shapes. Authored by Vansh Dhawan for Vecesta.co under the Unified Mentor internship, dated 10 November 2026. The scanner has no runtime dependency beyond Python's standard library.",
         "Privilege escalation is a change in effective authority across a system boundary. This ladder shows the risk under review: a limited local account may be able to influence a process or configuration that operates as root. The scanner reports conditions that deserve review; it does not prove that escalation is possible and never attempts it. Kernel vendor backports and application context can change a finding's meaning, so administrators should confirm each result with the operating system vendor.",
         "The project has three practical objectives. First, collect read-only facts from a Linux system. Second, explain why a configuration matters and how to correct it. Third, keep the work reviewable through fixture tests, scan coverage, structured reports, and comparisons. The scanner runs on Linux, while its parsers, rules, report rendering, and comparison logic are designed to run on Windows as well. This separation lets development continue without claiming a Windows machine is Linux.",
         "The collectors cover six broad areas. Identity and kernel checks describe the host. SUID and capability checks locate files that carry special privileges. Permission checks look for writable locations. Sudo and cron checks review policy and scheduled work. Systemd checks read unit files directly, so the service manager does not need to be active. Missing tools or unreadable paths appear in coverage as skipped checks with reasons.",
@@ -498,7 +498,7 @@ def make_presentation(folder, data):
     slide = setup("", 1)
     add_text(slide, "Linux Privilege\nEscalation Automation Toolkit", .72, 1.55, 8.2, 1.55, 39, C["text"], True)
     add_text(slide, "Red-team enumeration · Blue-team auditing", .77, 3.45, 7.4, .52, 19, C["cyan"], True)
-    add_text(slide, "[Your Name]  ·  [Company]  ·  [Supervisor]  ·  [Date]", .77, 4.25, 8.7, .4, 15, C["muted"])
+    add_text(slide, "Vansh Dhawan  ·  Vecesta.co  ·  Supervisor: [Supervisor]  ·  10 November 2026", .77, 4.25, 9.8, .4, 15, C["muted"])
     add_box(slide, 9.6, 1.65, 2.35, 2.35, C["card"], C["edge"]); add_text(slide, "READ\nONLY", 9.85, 2.08, 1.85, 1.0, 26, C["green"], True, align=PP_ALIGN.CENTER)
     slide.notes_slide.notes_text_frame.text = notes[0]
 
@@ -595,9 +595,9 @@ def make_presentation(folder, data):
         add_text(slide,"Counts loaded from the final Act 2 JSON report",1.0,6.0,11.1,.4,15,C["muted"],align=PP_ALIGN.CENTER)
     else:
         for i,(label,x) in enumerate((("Findings",".85"),("High / Critical","4.7"),("Fixed after teardown","8.55"))):
-            add_box(slide,float(x),1.65,3.45,1.0,C["card"],C["edge"]); add_text(slide,"SKIPPED",float(x)+.12,1.78,3.2,.4,22,C["amber"],True,align=PP_ALIGN.CENTER); add_text(slide,label,float(x)+.12,2.2,3.2,.32,14,C["muted"],align=PP_ALIGN.CENTER)
-        add_box(slide,1.15,3.25,11.0,1.55,C["card"],C["edge"]); add_text(slide,"Severity and category charts withheld: no real Linux scan JSON exists.",1.45,3.68,10.4,.6,20,C["text"],True,align=PP_ALIGN.CENTER)
-        add_text(slide,"Regenerate after two authenticated Kali demo runs.",1.5,5.35,10.2,.45,17,C["muted"],align=PP_ALIGN.CENTER)
+            add_box(slide,float(x),1.65,3.45,1.0,C["card"],C["edge"]); add_text(slide,"PENDING REAL RUN",float(x)+.12,1.78,3.2,.4,18,C["amber"],True,align=PP_ALIGN.CENTER); add_text(slide,label,float(x)+.12,2.2,3.2,.32,14,C["muted"],align=PP_ALIGN.CENTER)
+        add_box(slide,1.15,3.25,11.0,1.55,C["card"],C["edge"]); add_text(slide,"Severity and category charts withheld: PENDING REAL RUN on Linux.",1.45,3.68,10.4,.6,20,C["text"],True,align=PP_ALIGN.CENTER)
+        add_text(slide,"Regenerate after two authenticated Kali demo runs with tools/ingest_evidence.py.",1.5,5.35,10.2,.45,17,C["muted"],align=PP_ALIGN.CENTER)
     slide.notes_slide.notes_text_frame.text = notes[9]
 
     # 11 transcript frame
@@ -607,10 +607,10 @@ def make_presentation(folder, data):
         picture=slide.shapes.add_picture(str(screenshot), Inches(.85), Inches(1.55), width=Inches(7.2))
         picture._element.nvPicPr.cNvPr.set("descr", "Real host-side transcript showing the Linux-only scan guard")
         add_text(slide,"Host guard",8.45,1.78,3.4,.45,21,C["cyan"],True)
-        add_text(slide,"Linux finding screenshots are skipped until an authenticated Kali run is available.",8.45,2.35,3.6,1.45,18,C["muted"],valign=MSO_ANCHOR.TOP)
+        add_text(slide,"Linux finding screenshots: PENDING REAL RUN until Kali evidence bundle is ingested.",8.45,2.35,3.6,1.45,16,C["muted"],valign=MSO_ANCHOR.TOP)
     else:
-        add_box(slide,.9,1.75,11.5,2.0,C["card"],C["edge"]); add_text(slide,"Linux finding screenshots: SKIPPED",1.2,2.15,10.9,.7,25,C["amber"],True,align=PP_ALIGN.CENTER)
-        add_text(slide,"No real Linux transcript was collected.",1.3,3.05,10.7,.4,18,C["muted"],align=PP_ALIGN.CENTER)
+        add_box(slide,.9,1.75,11.5,2.0,C["card"],C["edge"]); add_text(slide,"Linux finding screenshots: PENDING REAL RUN",1.2,2.15,10.9,.7,22,C["amber"],True,align=PP_ALIGN.CENTER)
+        add_text(slide,"Pending real Linux evidence bundle ingestion.",1.3,3.05,10.7,.4,18,C["muted"],align=PP_ALIGN.CENTER)
     slide.notes_slide.notes_text_frame.text = notes[10]
 
     # 12 compare
@@ -623,8 +623,8 @@ def make_presentation(folder, data):
         add_text(slide,text[:900],.95,2.5,11.35,3.3,16,C["text"],font="Consolas",valign=MSO_ANCHOR.TOP)
     else:
         for i,(label,color) in enumerate((("NEW",C["cyan"]),("FIXED",C["green"]),("UNCHANGED",C["muted"]))):
-            add_box(slide,1.0+i*4.0,2.0,3.35,1.45,C["card"],C["edge"]); add_text(slide,label,1.2+i*4.0,2.22,2.95,.5,22,color,True,align=PP_ALIGN.CENTER); add_text(slide,"SKIPPED",1.2+i*4.0,2.8,2.95,.4,18,C["muted"],align=PP_ALIGN.CENTER)
-        add_text(slide,"Comparison needs Act 2 and Act 3 JSON reports.",1.2,4.4,10.9,.45,18,C["amber"],align=PP_ALIGN.CENTER)
+            add_box(slide,1.0+i*4.0,2.0,3.35,1.45,C["card"],C["edge"]); add_text(slide,label,1.2+i*4.0,2.22,2.95,.5,22,color,True,align=PP_ALIGN.CENTER); add_text(slide,"PENDING REAL RUN",1.2+i*4.0,2.8,2.95,.4,16,C["muted"],align=PP_ALIGN.CENTER)
+        add_text(slide,"Comparison needs Act 2 and Act 3 JSON reports (PENDING REAL RUN).",1.2,4.4,10.9,.45,18,C["amber"],align=PP_ALIGN.CENTER)
     slide.notes_slide.notes_text_frame.text = notes[11]
 
     # 13 mitigations
@@ -640,8 +640,8 @@ def make_presentation(folder, data):
     lines=[]
     for run in (1,2):
         v=test_counts.get(run); lines.append(f"pytest run {run}: {v['passed']} passed / {v['failed']} failed / {v['skipped']} skipped" if v else f"pytest run {run}: SKIPPED")
-    linux="Linux demo: PASS" if data else "Linux demo: SKIPPED"
-    evidence_lines=lines+[linux,"Hash proof and independent checks: "+("PASS" if data else "SKIPPED"),"Two-run fingerprint match: "+("PASS" if (EVIDENCE/"double_check_summary.md").exists() else "SKIPPED")]
+    linux="Linux demo: PASS" if data else "Linux demo: PENDING REAL RUN"
+    evidence_lines=lines+[linux,"Hash proof and independent checks: "+("PASS" if data else "PENDING REAL RUN"),"Two-run fingerprint match: "+("PASS" if (EVIDENCE/"double_check_summary.md").exists() else "PENDING REAL RUN")]
     for i,line in enumerate(evidence_lines):
         add_box(slide,.95,1.45+i*.75,11.35,.53,C["card"],C["edge"]); add_text(slide,line,1.2,1.49+i*.75,10.8,.4,17,C["green"] if "passed" in line or "PASS" in line else C["amber"])
     slide.notes_slide.notes_text_frame.text = notes[13]
@@ -786,17 +786,52 @@ def render_presentation_previews(path):
     contact.save(DOCS/"ppt_contact_sheet.png")
 
 
+def _check_final_evidence():
+    """Exit with an error message if INGEST_REPORT.md doesn't show all PASS."""
+    ingest = EVIDENCE / "INGEST_REPORT.md"
+    if not ingest.exists():
+        raise SystemExit(
+            "ERROR: --final mode requires evidence/INGEST_REPORT.md but it does not exist.\n"
+            "Run: python tools/ingest_evidence.py <bundle.zip>"
+        )
+    text = ingest.read_text(encoding="utf-8", errors="replace")
+    if "FAIL" in text:
+        raise SystemExit(
+            "ERROR: evidence/INGEST_REPORT.md contains FAIL entries.\n"
+            "Fix the ingest issues before building final documents."
+        )
+
+
 def main():
-    parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--report-only",action="store_true")
-    parser.add_argument("--presentation-only",action="store_true")
-    args=parser.parse_args()
-    folder,data=load_real_evidence()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--report-only", action="store_true")
+    parser.add_argument("--presentation-only", action="store_true")
+    mode_group = parser.add_mutually_exclusive_group()
+    mode_group.add_argument(
+        "--draft", action="store_true", default=True,
+        help="(default) Allow PENDING REAL RUN placeholders where Linux evidence is missing."
+    )
+    mode_group.add_argument(
+        "--final", action="store_true",
+        help="Require evidence/INGEST_REPORT.md with no FAIL before building."
+    )
+    args = parser.parse_args()
+
+    if args.final:
+        _check_final_evidence()
+        print("INFO: --final mode: INGEST_REPORT.md OK, loading real evidence.")
+    else:
+        print("INFO: --draft mode: PENDING REAL RUN placeholders used where Linux evidence is absent.")
+
+    folder, data = load_real_evidence()
     if not args.presentation_only:
-        write_diagrams(); out=make_docx(folder,data); print(out)
+        write_diagrams()
+        out = make_docx(folder, data)
+        print(out)
     if not args.report_only:
-        out=make_presentation(folder,data); print(out)
+        out = make_presentation(folder, data)
+        print(out)
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     main()

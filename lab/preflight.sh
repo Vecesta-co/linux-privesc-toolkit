@@ -83,3 +83,4 @@ if [[ "$MISSING_OPTIONAL" -gt 0 ]]; then
   echo "Note: $MISSING_OPTIONAL optional tool(s) missing; capabilities checks will gracefully degrade to SKIPPED."
 fi
 exit 0
+

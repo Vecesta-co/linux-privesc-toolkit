@@ -26,7 +26,8 @@ def compute_sha256(path: Path) -> str:
     return h.hexdigest()
 
 
-def ingest(zip_path: Path) -> int:
+def ingest(zip_path: Path, target_evidence_dir: Path | None = None) -> int:
+    evidence_dir = target_evidence_dir or EVIDENCE
     print(f"=== Starting Evidence Ingest: {zip_path.name} ===")
     if not zip_path.is_file():
         print(f"ERROR: Bundle file not found: {zip_path}", file=sys.stderr)
@@ -115,10 +116,10 @@ def ingest(zip_path: Path) -> int:
         # Copy files into project evidence directory without clobbering Windows test files
         print("Deploying ingested evidence to project workspace...")
         src_ev = extract_dir / "evidence" if (extract_dir / "evidence").is_dir() else extract_dir
-        EVIDENCE.mkdir(parents=True, exist_ok=True)
+        evidence_dir.mkdir(parents=True, exist_ok=True)
 
         for item in src_ev.iterdir():
-            dest = EVIDENCE / item.name
+            dest = evidence_dir / item.name
             if item.is_dir():
                 shutil.copytree(item, dest, dirs_exist_ok=True)
             else:
@@ -128,7 +129,7 @@ def ingest(zip_path: Path) -> int:
         print("Executing verification checklist on run1 and run2...")
         verify_tool = ROOT / "tools" / "verify_all.py"
         for run_name in ("run1", "run2"):
-            run_dir = EVIDENCE / run_name
+            run_dir = evidence_dir / run_name
             if run_dir.is_dir():
                 res = subprocess.run([sys.executable, str(verify_tool), str(run_dir)], capture_output=True, text=True)
                 (run_dir / "verify_all.txt").write_text(res.stdout, encoding="utf-8")
@@ -141,8 +142,8 @@ def ingest(zip_path: Path) -> int:
 
         # Regenerate double_check_summary.md independently from raw reports
         print("Recomputing double_check_summary.md independently from raw reports...")
-        r1_rep = EVIDENCE / "run1" / "act2_lab" / "scan_act2_lab.json"
-        r2_rep = EVIDENCE / "run2" / "act2_lab" / "scan_act2_lab.json"
+        r1_rep = evidence_dir / "run1" / "act2_lab" / "scan_act2_lab.json"
+        r2_rep = evidence_dir / "run2" / "act2_lab" / "scan_act2_lab.json"
         if r1_rep.is_file() and r2_rep.is_file():
             d1 = json.loads(r1_rep.read_text(encoding="utf-8"))
             d2 = json.loads(r2_rep.read_text(encoding="utf-8"))
@@ -156,16 +157,16 @@ def ingest(zip_path: Path) -> int:
             summary += f"- Fingerprint Match: {'PERFECT MATCH (100%)' if match else 'MISMATCH'}\n\n"
             if not match:
                 summary += f"- Mismatched Fingerprints: {fp1 ^ fp2}\n"
-            (EVIDENCE / "double_check_summary.md").write_text(summary, encoding="utf-8")
+            (evidence_dir / "double_check_summary.md").write_text(summary, encoding="utf-8")
             checks.append(("Independent Double-Check", "PASS" if match else "FAIL", f"Match: {match} ({len(fp1)} findings)"))
         else:
             checks.append(("Independent Double-Check", "FAIL", "Raw reports for run1 or run2 missing"))
 
         # Render terminal screenshots
         render_tool = ROOT / "tools" / "render_terminal_png.py"
-        screen_dir = EVIDENCE / "screenshots"
+        screen_dir = evidence_dir / "screenshots"
         screen_dir.mkdir(parents=True, exist_ok=True)
-        transcript_path = EVIDENCE / "run1" / "console_transcript.txt"
+        transcript_path = evidence_dir / "run1" / "console_transcript.txt"
         if transcript_path.is_file():
             print("Rendering terminal screenshots from real transcript...")
             subprocess.run([sys.executable, str(render_tool), str(transcript_path), str(screen_dir / "act1_clean.png"), "--title", "Act 1: Clean Baseline Scan", "--keyword", "ACT 1", "--max-lines", "35"], check=False)
@@ -195,8 +196,8 @@ def ingest(zip_path: Path) -> int:
 
     report_lines.append("")
     report_lines.append(f"**Overall Ingest Result:** {'ALL CHECKS PASSED' if all_passed else 'INGEST FAILED'}\n")
-    (EVIDENCE / "INGEST_REPORT.md").write_text("\n".join(report_lines) + "\n", encoding="utf-8")
-    print(f"\nIngest report written to {EVIDENCE / 'INGEST_REPORT.md'}")
+    (evidence_dir / "INGEST_REPORT.md").write_text("\n".join(report_lines) + "\n", encoding="utf-8")
+    print(f"\nIngest report written to {evidence_dir / 'INGEST_REPORT.md'}")
 
     return 0 if all_passed else 1
 
@@ -204,9 +205,11 @@ def ingest(zip_path: Path) -> int:
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("bundle", type=Path, help="Path to evidence bundle zip")
+    parser.add_argument("--dest", type=Path, default=None, help="Target evidence directory (default: evidence/)")
     args = parser.parse_args()
-    sys.exit(ingest(args.bundle))
+    sys.exit(ingest(args.bundle, target_evidence_dir=args.dest))
 
 
 if __name__ == "__main__":
     main()
+

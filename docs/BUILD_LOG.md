@@ -65,3 +65,43 @@ All commands below ran from the project root unless otherwise stated. Results re
 - Commands: `git status`; `git log --oneline`.
 - Results: repository clean, all requirements fulfilled, ready for submission.
 - Status: PASS.
+
+## Completion Pass A — Final Verification & Kali Handoff Architecture (2026-11-10)
+
+- Project: Linux Privilege Escalation Automation Toolkit
+- Author: Vansh Dhawan (Intern)
+- Company: Vecesta.co
+- Organization: Unified Mentor
+- Date: 10 November 2026
+- Branch: `main` (renamed from `master` via `git branch -M main`)
+
+### Actions Taken:
+1. **Audit & Lab Hardening**:
+   - Audited `lab/run_lab_demo.sh` to ensure passthrough of `--yes-i-am-in-a-disposable-lab` to `lab/setup_lab.sh`.
+   - Created `lab/preflight.sh` to verify all required binaries (`python3` ≥3.10, GNU `find`, `sudo`, `visudo`, `useradd`, `userdel`, `runuser`, `unzip`, `sha256sum`) and optional tools (`getcap`, `setcap`, `systemctl`).
+   - Created `lab/test_interrupt_teardown.sh` to simulate demo interruption (SIGINT/SIGTERM) and verify that trap teardown reliably purges all planted lab artifacts.
+   - Built `lab/collect_evidence.sh` as the one-command Kali evidence collector executing preflight, env info capture, double pytest runs, 3-act demo runs 1 & 2, comparative fingerprint verification, and SHA256-verified zip bundle output.
+   - Configured all `.sh` scripts with LF line endings and executable index bits (`git update-index --chmod=+x`).
+2. **Handoff Packaging & Documentation**:
+   - Implemented `tools/make_handoff.py` to package 54 project files into `dist/linux-privesc-toolkit-handoff.zip` with strict LF normalization and POSIX permission metadata.
+   - Authored `docs/KALI_HANDOFF_GUIDE.md` detailing copy-paste execution, transfer options, and troubleshooting.
+   - Authored `docs/RECORDING_GUIDE.md` incorporating Vansh Dhawan's identity, Vecesta.co, Unified Mentor, and a 2-minute narration script.
+3. **Evidence Ingestion Engine**:
+   - Implemented `tools/ingest_evidence.py` to cryptographically verify incoming evidence bundles, guard against simulated kernel leakage, scan for personal Windows paths, regenerate summary reports, render terminal screenshots, and generate `evidence/INGEST_REPORT.md`.
+   - Created and verified unit test `tests/test_ingest_synthetic.py` (PASS in 1.87s).
+4. **Documentation & QA Refinement**:
+   - Updated `tools/make_docs.py` with mutually exclusive `--draft` (default) and `--final` CLI modes.
+   - Replaced unpersonalized placeholders in DOCX cover page and PPTX cover slide with author identity (`Vansh Dhawan`, `Vecesta.co`, `Unified Mentor`, `10 November 2026`).
+   - Replaced generic "SKIPPED" with transparent `"PENDING REAL RUN"` markers on slides 10, 11, 12, 14 and DOCX report tables where Linux guest evidence is awaiting Kali bundle collection.
+   - Built `tools/check_consistency.py` validating 54 required files, LF shell script endings, text hygiene (no TODO/XXX/lorem, no Windows absolute paths), and evidence sync.
+   - Authored `docs/PPT_QA.md` scoring all 15 presentation slides honestly (7/10 to 9/10), detailing per-slide weaknesses, applied fixes, and programmatic validation receipts.
+   - Updated `README.md` with identity details, Kali Linux evidence collection quick start, and testing status.
+
+### Verification Results:
+- `pytest`: 29 passed, 1 skipped (Linux-only E2E test).
+- `pytest tests/test_runner_safety.py -v`: 6 passed (strict allowlist and argument injection defenses verified).
+- `python tools/check_consistency.py --draft`: PASS across all 54 required files, line endings, text hygiene, and evidence sync.
+- `python tools/make_docs.py --draft`: Clean generation of `docs/Project_Report.docx` and `docs/Final_Presentation.pptx`.
+- Shell script syntax: LF enforced on all `.sh` scripts, executable index bits set.
+
+- Status: PASS. Ready for Kali Linux VM evidence collection.

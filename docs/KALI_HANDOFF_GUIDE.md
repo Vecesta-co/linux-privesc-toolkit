@@ -184,3 +184,4 @@ To record your demonstration video:
    ```
 2. On Windows, press `Win + Alt + R` (Windows Game Bar) or use OBS to record the VM window.
 3. Follow the 2-minute spoken narration script in [`docs/RECORDING_GUIDE.md`](file:///c:/Users/pc/OneDrive/Desktop/Unified%20Mentor(Intership%20journey)/Projects%20made%20under%20this%20internship/Project-2/docs/RECORDING_GUIDE.md).
+
