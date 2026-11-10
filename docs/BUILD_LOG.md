@@ -146,3 +146,15 @@ All commands below ran from the project root unless otherwise stated. Results re
    - Fresh-clone build and check test verified.
 
 - Status: PASS. All deployment artifacts, workflows, and documentation complete.
+
+## Phase: Project Explanation Video & Release Packaging
+- Date: 2026-11-10
+- Input Video: `~/Downloads/VID20261110194343.mp4` (Size: 1,053,829,791 bytes, ~1.005 GB, 06:59 duration, H.264 video, recorded by Vansh Dhawan).
+- Strategy: GitHub hard file limit is 100 MB for git push. Utilizing GitHub Releases (`v1.0.0`) which natively supports up to 2 GB per asset with global CDN bandwidth.
+- Action:
+  1. Authenticated `gh` CLI with `repo` and `workflow` scopes.
+  2. Created release `v1.0.0` and uploaded `project_explanation_video.mp4` asset (1.05 GB).
+  3. SHA-256 Digest: `64a15fa11dea8aa38fccee10542605a1fae8e087b73a23d5b4c1807d7baaac4d`.
+  4. Updated `README.md` and `site_src/index.html` with direct release download links and hero action buttons.
+  5. Verified static site compilation and integrity with `python tools/build_site.py` and `python tools/check_site.py`.
+- Result: Release live at `https://github.com/Vecesta-co/linux-privesc-toolkit/releases/tag/v1.0.0` with verified asset. Status: PASS.
